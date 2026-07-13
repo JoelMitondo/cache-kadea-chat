@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kadea Chat - Accueil</title>
+    <script src="./SCRIPTS/app.js" type="module" defer></script>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -93,38 +94,5 @@
         </div>
     </footer>
 
-    <!-- SCRIPT DE GESTION DU THÈME -->
-    <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-        const htmlElement = document.documentElement;
-
-        // Synchronise visuellement les icônes du bouton
-        function syncIcons() {
-            if (htmlElement.classList.contains('dark')) {
-                themeToggleLightIcon.classList.remove('hidden');
-                themeToggleDarkIcon.classList.add('hidden');
-            } else {
-                themeToggleLightIcon.classList.add('hidden');
-                themeToggleDarkIcon.classList.remove('hidden');
-            }
-        }
-
-        // Lancement initial de la synchronisation des icônes
-        syncIcons();
-
-        // Écouteur de clic pour changer de thème
-        themeToggleBtn.addEventListener('click', function() {
-            if (htmlElement.classList.contains('dark')) {
-                htmlElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                htmlElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-            syncIcons();
-        });
-    </script>
 </body>
 </html>
