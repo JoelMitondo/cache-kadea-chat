@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Forcer le mode sombre par classe pour le CLI Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
+/*npx @tailwindcss/cli -i ./STYLES/input.css -o ./STYLES/output.css --watch*/
