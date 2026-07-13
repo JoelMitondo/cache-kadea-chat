@@ -17,57 +17,95 @@ contenairConversationsMessages.innerHTML=""
 
 
 async function afficherLesUsers() {
-    //BOUCLE POUR AFFICHE TOUTES LES CONVERSATIONS
-    for(conversation of toutesConversations){
-        const blocMessage=document.createElement("div")
-        blocMessage.id=conversation.id
-        blocMessage.className="classConversation flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors border-t border-transparent"
-        const blocImg=document.createElement("div")
-        blocImg.textContent="JM"
-        blocImg.className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-sm"
-        const blocContenu=document.createElement("div");
-        blocContenu.className="ml-3 flex-1 overflow-hidden"
-        const blocNomEtJour=document.createElement("div");
-        blocNomEtJour.className="flex justify-between items-center mb-0.5"
-        const nomAutre=document.createElement("h3");
-        nomAutre.className="text-sm font-semibold text-gray-900 dark:text-white truncate"
+    // Sécurité : on vérifie que le tableau des conversations existe
+    if (!toutesConversations) return;
+    // === ETAPE DE TRI AUTOMATIQUE ===
+    // Trie du message le plus récent au plus ancien
+    toutesConversations.sort((a, b) => {
+        // On récupère le timestamp du dernier message pour A (sinon 0 si pas de message)
+        const timeA = a.messages && a.messages.length > 0 
+            ? new Date(a.messages[0].createdAt).getTime() 
+            : 0; 
+            
+        // On récupère le timestamp du dernier message pour B (sinon 0 si pas de message)
+        const timeB = b.messages && b.messages.length > 0 
+            ? new Date(b.messages[0].createdAt).getTime() 
+            : 0;
+
+        // Tri décroissant : on soustrait A de B
+        return timeB - timeA;
+    });
+    // BOUCLE POUR AFFICHER TOUTES LES CONVERSATIONS
+    for (let conversation of toutesConversations) {
+        const blocMessage = document.createElement("div")
+        blocMessage.id = conversation.id
+        blocMessage.className = "classConversation flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors border-t border-transparent"
+         
+        const blocContenu = document.createElement("div");
+        blocContenu.className = "ml-3 flex-1 overflow-hidden"
+        
+        const blocNomEtJour = document.createElement("div");
+        blocNomEtJour.className = "flex justify-between items-center mb-0.5"
+        
+        const nomAutre = document.createElement("h3");
+        nomAutre.className = "text-sm font-semibold text-gray-900 dark:text-white truncate"
         
         const idConversation = conversation.id
-        await informationDuneConversation (key, token, idConversation)
+        await informationDuneConversation(key, token, idConversation)
+        
         const infoMessage = JSON.parse(localStorage.getItem(`infoConversation-${idConversation}`))
-        for(message of infoMessage.data.conversation.participants){
-            if(message.user.id !== monId){
-                nomAutre.textContent=message.user.fullName
+        const blocImg = document.createElement("div")
+        blocImg.className = "flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-sm"
+        const imgConversation=document.createElement("img")
+        imgConversation.alt=`la photo de `
+        imgConversation.className="rounded-full w-12 h-12"
+        
+        // Sécurité : On vérifie que les données de la conversation et des participants existent
+        if (infoMessage?.data?.conversation?.participants) {
+            for (let participant of infoMessage.data.conversation.participants) {
+                if (participant.user.id !== monId) {
+                    nomAutre.textContent = participant.user.fullName
+                    imgConversation.src= participant.user.avatarUrl
+                }
             }
         }
-        
-    
+        blocImg.appendChild(imgConversation)
+        const dernierjour = document.createElement("span")
+        dernierjour.className = "text-[11px] text-gray-400"
+        dernierjour.id = conversation.id
 
-        const dernierjour=document.createElement("span")
-        dernierjour.className="text-[11px] text-gray-400"
-        dernierjour.id=conversation.id
-        const dateBruteDuDernierMessage=conversation.messages[0].createdAt
-        dateBruteDuDernierMessage.id=conversation.id
-        const date = new Date(dateBruteDuDernierMessage)
+        const dernierMessage = document.createElement("p");
+        dernierMessage.id = conversation.id
+        dernierMessage.className = "text-[13px] text-gray-500 dark:text-gray-400 truncate pr-2"
 
-        //formatage de la date selon les préferences
-        const dateFormater = date.toLocaleString("fr-FR", {
-            weekday: "long",
-            day : "numeric",
-            month : "long",
-            year: "numeric",
-            hour :"2-digit",
-            minute:"2-digit"
-        })
-        dernierjour.textContent=dateFormater
+        // === GESTION SÉCURISÉE DES MESSAGES VIDE / EXISTANTS ===
+        const aDesMessages = conversation.messages && conversation.messages.length > 0;
+
+        if (aDesMessages) {
+            // S'il y a des messages, on formate la date du premier
+            const dateBruteDuDernierMessage = conversation.messages[0].createdAt;
+            const date = new Date(dateBruteDuDernierMessage);
+            
+            const dateFormater = date.toLocaleString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+            dernierjour.textContent = dateFormater;
+            
+            // On affiche le contenu du dernier message
+            dernierMessage.textContent = conversation.messages[0].content ?? "Message vide";
+        } else {
+            // Si la conversation vient d'être créée et n'a aucun message
+            dernierjour.textContent = "Nouveau";
+            dernierMessage.textContent = "Aucun message pour le moment";
+        }
 
         blocNomEtJour.appendChild(nomAutre)
         blocNomEtJour.appendChild(dernierjour)
-
-        const dernierMessage=document.createElement("p");
-        dernierMessage.id=conversation.id
-        dernierMessage.className="text-[13px] text-gray-500 dark:text-gray-400 truncate pr-2"
-        dernierMessage.textContent=conversation.messages[0].content
 
         blocContenu.appendChild(blocNomEtJour)
         blocContenu.appendChild(dernierMessage)

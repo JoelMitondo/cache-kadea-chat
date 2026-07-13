@@ -2,7 +2,7 @@ const key="wksp_43bb0d0056273188e10830ef1db75c22"
 let lien = "https://kadea-chat-api.onrender.com"
 const profilRecupere = JSON.parse(localStorage.getItem('profileUser'))
 const monId = `${profilRecupere.id}`
-console.log(monId)
+const token = localStorage.getItem('token')
 //récuperation de tous les users stockés en local
 const tousUsers = localStorage.getItem("tousLesUsers")
 const users = JSON.parse(tousUsers) //tableau des tous les users
@@ -85,28 +85,45 @@ for(user of users){
 
 }
 
-containerUsers.addEventListener("click", (event)=>{
+containerUsers.addEventListener("click", async (event)=>{
     const utilisateur = event.target.closest(".utilisateur");
     if(!utilisateur){
         return
     }
     const utilisateurId = utilisateur.id
-    console.log(utilisateurId) 
+
+    await creationConversation (token, monId, utilisateurId)
     // a chaque clique, j'ai recupère l'id du contact cliqué
     /* j'ai déja enregisté l'id de user connecté sur monId
     a chaque clique, ssi aucune conversation avec les deux id existe, j'en crée une
     et je dirige l'utilisateur jusqu'à l'interface de leur message*/
 
-        for(conversation of conversations){
-        for(idUserConversation of conversation.participants){
-            if(idUserConversation.user.id === user.id){
-                btnDiscuter.textContent="Messages"
-                btnDiscuter.className="bg-blue-600 hover:bg-gray-700 dark:bg-blue-600 dark:hover:bg-gray-700 text-gray-200 dark:text-gray-700 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
-            } else {
-                btnDiscuter.textContent="Discuter"
-                btnDiscuter.className="bg-gray-100 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-600 text-gray-700 dark:text-gray-200 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
-            }
-        }
-    }
 })
 
+//function pour crée une conversation entre deux utilisateurs
+async function creationConversation (token, userId1, userId2) {
+    try{
+        const reponse = await fetch("https://kadea-chat-api.onrender.com/conversations", {
+            method : "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-key": key,
+                "Authorization": `Bearer ${token}`},
+            body: JSON.stringify({
+                "type": "private",
+                "name": `Conversation entre ${userId1} et ${userId2}`,
+                "participantIds": [userId1, userId2]
+            })
+        })
+        const reponseData = await reponse.json()
+        if(reponse.ok){
+            alert("crée")
+            return reponseData.data.conversation.id;
+        } else {
+            throw new Error(JSON.stringify(reponseData));                    
+        }
+    } catch (error) {
+        console.error("Erreur lors de la création de la conversation :", error);
+        throw error;
+    }
+}
