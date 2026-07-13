@@ -33,7 +33,7 @@ async function afficherLesUsers() {
         nomAutre.className="text-sm font-semibold text-gray-900 dark:text-white truncate"
         
         const idConversation = conversation.id
-//        await informationDuneConversation (key, token, idConversation)
+        await informationDuneConversation (key, token, idConversation)
         const infoMessage = JSON.parse(localStorage.getItem(`infoConversation-${idConversation}`))
         for(message of infoMessage.data.conversation.participants){
             if(message.user.id !== monId){
@@ -117,7 +117,7 @@ contenairConversationsMessages.addEventListener("click", async (event) => {
     const zoneDesMessages = document.getElementById("zoneDesMessages");
     zoneDesMessages.innerHTML = ""; 
 
-    //    await ListeMessagesConversations(token, idConversation)
+        await ListeMessagesConversations(token, idConversation)
     // Chargement et affichage des messages depuis le localStorage
     const messages = JSON.parse(localStorage.getItem(`messageConversation-${idConversation}`)).messages;
     

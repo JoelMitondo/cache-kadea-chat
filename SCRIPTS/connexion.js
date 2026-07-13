@@ -153,17 +153,11 @@ btnLogin.addEventListener('click', async (event)=>{
         const emailValue = email.value;
         const passwordValue = passwordLogin.value;
         await connexion(emailValue, passwordValue)
-            .then(data => {
-            if (data.success) {
-            console.log("Ca marche", data);
-                const token = localStorage.getItem('token');
-                await informationUser(token);
-                await users(token);
-                await recevoirTousConversationUser(token);
-                window.location.replace("profil.html") ;
-            } 
-            return
-            })
-            .catch(error => console.error("Erreur réseau :", error))
+        const token = localStorage.getItem('token');
+        await informationUser(token);
+        await users(token);
+        await recevoirTousConversationUser(token);
+        window.location.replace("profil.html") ;
+            
     }
 })

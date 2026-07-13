@@ -69,28 +69,8 @@ for(user of users){
     })
     dateEnLigne.textContent=`En ligne le ${dateFormater}`;
     const btnDiscuter=document.createElement("button")
-    //Gestion de l'affichage selon laquelle il y a déjà une conversation ou pas pour afficher message ou discuter!
-
-
-    for(conversation of conversations){
-        for(idUserConversation of conversation.participants){
-            if(idUserConversation.user.id === user.id){
-                btnDiscuter.textContent="Messages"
-                btnDiscuter.className="bg-blue-600 hover:bg-gray-700 dark:bg-blue-600 dark:hover:bg-gray-700 text-gray-200 dark:text-gray-700 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
-            } else {
-                btnDiscuter.textContent="Discuter"
-                btnDiscuter.className="bg-gray-100 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-600 text-gray-700 dark:text-gray-200 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
-            }
-        }
-    }
-    
-
-
-    
-
-
-
-    
+    btnDiscuter.textContent="Discuter"
+    btnDiscuter.className="bg-gray-100 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-600 text-gray-700 dark:text-gray-200 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all" 
     blocStatus.appendChild(dateEnLigne);
     blocStatus.appendChild(btnDiscuter);
 
@@ -116,5 +96,17 @@ containerUsers.addEventListener("click", (event)=>{
     /* j'ai déja enregisté l'id de user connecté sur monId
     a chaque clique, ssi aucune conversation avec les deux id existe, j'en crée une
     et je dirige l'utilisateur jusqu'à l'interface de leur message*/
+
+        for(conversation of conversations){
+        for(idUserConversation of conversation.participants){
+            if(idUserConversation.user.id === user.id){
+                btnDiscuter.textContent="Messages"
+                btnDiscuter.className="bg-blue-600 hover:bg-gray-700 dark:bg-blue-600 dark:hover:bg-gray-700 text-gray-200 dark:text-gray-700 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+            } else {
+                btnDiscuter.textContent="Discuter"
+                btnDiscuter.className="bg-gray-100 hover:bg-blue-600 dark:bg-gray-700 dark:hover:bg-blue-600 text-gray-700 dark:text-gray-200 hover:text-white dark:hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+            }
+        }
+    }
 })
 
