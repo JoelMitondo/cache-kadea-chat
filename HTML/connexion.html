@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+        <link rel="stylesheet" href="./../STYLES/output.css">
+    <script src="./../SCRIPTS/connexion.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4 text-gray-800">
+
+    <!--La page de connexion-->
+    <div class="w-full max-w-[420px] flex flex-col items-center">
+        
+        <div class="bg-[#2563EB] w-12 h-12 rounded-xl flex items-center justify-center mb-5 shadow-sm">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-bold text-[#1D4ED8] mb-1.5">Welcome back</h1>
+        <p class="text-gray-500 text-sm mb-6 text-center">Please enter your details to sign in to Djo Chat</p>
+
+        <div class="bg-white w-full rounded-xl shadow-sm border border-gray-200 p-8">
+            <form action="#" method="POST" class="space-y-5">
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <input type="email" id="emailLogin" required placeholder="joelMitondo@gmail.com" class="block w-full pl-11 pr-3 py-2.5 bg-[#F8FAFC] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                    </div>
+                    <p id="error-login-email" class="hidden mt-1.5 text-xs text-red-500 font-medium"></p>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <a href="./motPasseOublie.html" class="text-sm font-medium text-[#2563EB] hover:underline">Forgot?</a>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <input type="password" id="passwordLogin" required placeholder="••••••••" class="block w-full pl-11 pr-10 py-2.5 bg-[#F8FAFC] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
+                            <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p id="error-login-password" class="mt-1.5 text-xs text-red-500 font-medium">Mot de passe incorrect</p>
+                </div>
+
+                <div class="flex items-center pt-1">
+                    <input id="keep-signed-in" type="checkbox" class="h-4 w-4 text-[#2563EB] bg-[#F8FAFC] border-gray-300 rounded focus:ring-blue-500">
+                    <label for="keep-signed-in" class="ml-2 block text-sm text-gray-700">
+                        Keep me signed in
+                    </label>
+                </div>
+
+                <button type="submit" id="btnLogin" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-[15px] font-semibold text-white bg-[#2563EB] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors mt-2">
+                    Login
+                </button>
+
+            </form>
+        </div>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+            Don't have an account? <a href="./creationCompte.html" class="text-[#2563EB] font-medium hover:underline">Create Account</a>
+        </p>
+        <p class="text-center text-sm text-gray-600 mt-6">
+           <a href="./../index.html" class="text-[#2563EB] font-medium hover:underline">Acceuil</a>
+        </p>
+
+    </div>
+
+</body>
+</html>

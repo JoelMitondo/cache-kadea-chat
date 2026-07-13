@@ -1,0 +1,158 @@
+/* style.css */
+
+/* variables globales pour le MODE CLAIR */
+:root {
+    --bg-landing: #f8fafc;
+    --bg-app: #ffffff;
+    --bg-sidebar: #f8fafc;
+    --bg-chat-list: #ffffff;
+    --bg-header-app: #ffffff;
+    --bg-chat-area: #fcfdfe;
+    --bg-input-bar: #ffffff;
+    
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --text-brand: #2563eb;
+    --text-white: #ffffff;
+
+    --border-main: #e2e8f0;
+
+    /* Éléments d'interface utilisateur */
+    --bg-toggle: rgba(255, 255, 255, 0.5);
+    --bg-badge: #eff6ff;
+    --text-badge: #1d4ed8;
+    --border-badge: #dbeafe;
+    
+    --bg-conv-active: rgba(219, 234, 254, 0.5);
+    --bg-conv-hover: #f8fafc;
+    
+    --bg-msg-received: #f1f5f9;
+    --text-msg-received: #1e293b;
+    --bg-msg-sent: #2563eb;
+    --text-msg-sent: #ffffff;
+    
+    --bg-input-field: rgba(239, 246, 255, 0.5);
+    --border-input-field: #dbeafe;
+    
+    /* Cercles Lumineux Arrière-plan */
+    --aura-1: rgba(96, 165, 250, 0.1);
+    --aura-2: rgba(129, 140, 248, 0.1);
+
+    /* Initiales des Avatars */
+    --bg-av-blue: #dbeafe;   --text-av-blue: #2563eb;
+    --bg-av-orange: #ffedd5; --text-av-orange: #ea580c;
+    --bg-av-gray: #e2e8f0;   --text-av-gray: #475569;
+}
+
+/* Variables écrasées pour le MODE SOMBRE */
+html.dark {
+    --bg-landing: #030712;
+    --bg-app: #111827;
+    --bg-sidebar: rgba(31, 41, 55, 0.4);
+    --bg-chat-list: #1f2937;
+    --bg-header-app: #1f2937;
+    --bg-chat-area: #111827;
+    --bg-input-bar: #1f2937;
+    
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-brand: #3b82f6;
+
+    --border-main: #374151;
+
+    --bg-toggle: rgba(17, 24, 39, 0.5);
+    --bg-badge: rgba(30, 58, 138, 0.4);
+    --text-badge: #60a5fa;
+    --border-badge: rgba(30, 41, 59, 0.5);
+    
+    --bg-conv-active: rgba(30, 58, 138, 0.25);
+    --bg-conv-hover: rgba(55, 65, 81, 0.3);
+    
+    --bg-msg-received: #1f2937;
+    --text-msg-received: #e5e7eb;
+    
+    --bg-input-field: rgba(55, 65, 81, 0.5);
+    --border-input-field: #4b5563;
+    
+    --aura-1: rgba(37, 99, 235, 0.05);
+    --aura-2: rgba(79, 70, 229, 0.05);
+
+    --bg-av-blue: rgba(30, 58, 138, 0.5);     --text-av-blue: #93c5fd;
+    --bg-av-orange: rgba(124, 45, 18, 0.5);   --text-av-orange: #fdba74;
+    --bg-av-gray: #374151;                    --text-av-gray: #d1d5db;
+}
+
+/* --- CLASSES DE COULEURS VANILLA --- */
+.theme-bg-landing { background-color: var(--bg-landing); }
+.theme-bg-app { background-color: var(--bg-app); }
+.theme-bg-sidebar { background-color: var(--bg-sidebar); }
+.theme-bg-chat-list { background-color: var(--bg-chat-list); }
+.theme-bg-header-app { background-color: var(--bg-header-app); }
+.theme-bg-chat-area { background-color: var(--bg-chat-area); }
+.theme-bg-input-bar { background-color: var(--bg-input-bar); }
+
+.theme-text-main { color: var(--text-main); }
+.theme-text-muted { color: var(--text-muted); }
+.theme-text-brand { color: var(--text-brand); }
+.theme-text-white { color: var(--text-white); }
+.theme-border { border-color: var(--border-main); }
+
+/* Bouton bascule de thème */
+.theme-toggle-btn {
+    border-color: var(--border-main);
+    background-color: var(--bg-toggle);
+    color: var(--text-muted);
+}
+.theme-toggle-btn:hover { color: var(--text-main); }
+
+/* Badges de notifications */
+.theme-badge {
+    background-color: var(--bg-badge);
+    border-color: var(--border-badge);
+    color: var(--text-badge);
+}
+
+/* Boutons principaux */
+.theme-btn-primary {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+.theme-btn-primary:hover { background-color: #1d4ed8; }
+
+.theme-btn-secondary {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    border-color: var(--border-main);
+}
+.theme-btn-secondary:hover { background-color: var(--bg-conv-hover); }
+
+/* Éléments de conversation */
+.theme-conv-active { background-color: var(--bg-conv-active); }
+.theme-conv-item:hover { background-color: var(--bg-conv-hover); }
+
+/* Bulles de messages */
+.theme-msg-received { background-color: var(--bg-msg-received); color: var(--text-msg-received); }
+.theme-msg-sent { background-color: var(--bg-msg-sent); color: var(--text-msg-sent); }
+
+/* Champs d'écriture (Inputs) */
+.theme-input-field {
+    background-color: var(--bg-input-field);
+    border-color: var(--border-input-field);
+    color: var(--text-main);
+}
+
+/* Arrière-plans décoratifs */
+.theme-aura-1 { background-color: var(--aura-1); }
+.theme-aura-2 { background-color: var(--aura-2); }
+
+/* Couleurs des pastilles Avatars initials */
+.av-blue { background-color: var(--bg-av-blue); color: var(--text-av-blue); }
+.av-orange { background-color: var(--bg-av-orange); color: var(--text-av-orange); }
+.av-gray { background-color: var(--bg-av-gray); color: var(--text-av-gray); }
+
+/* Titre dégradé Accueil */
+.theme-text-gradient {
+    background: linear-gradient(to right, #2563eb, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
