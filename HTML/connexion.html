@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-        <link rel="stylesheet" href="./../STYLES/output.css">
+    <link rel="stylesheet" href="./../STYLES/output.css">
+    <script src="./../SCRIPTS/app.js"
     <script src="./../SCRIPTS/connexion.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -12,6 +13,13 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 <body class="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4 text-gray-800">
     <!--La page de connexion-->
