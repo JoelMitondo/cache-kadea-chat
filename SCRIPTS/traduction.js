@@ -14,7 +14,7 @@ export function traductionDeLaPage(){
     async function loadTranslations() {
         try {
             // Le navigateur va chercher le fichier de manière asynchrone
-            const response = await fetch('./../SCRIPTS/traduction.json'); 
+            const response = await fetch('./SCRIPTS/traduction.json'); 
             translations = await response.json(); // On extrait les données JSON
             
             // Une fois le fichier chargé, on peut appliquer la traduction

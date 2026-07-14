@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kadea Chat - Accueil</title>
-    <script src="./SCRIPTS/app.js" type="module" defer></script>
+    <!-- On charge le script de gestion avec type="module" -->
+    <script src="./SCRIPTS/app.js" type="module"></script>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -38,13 +39,29 @@
             <span class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Kadea <span class="text-blue-600">Chat</span></span>
         </div>
 
-        <!-- Bouton de bascule Mode Sombre / Clair -->
-        <button id="theme-toggle" title="Changer de mode" class="w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all cursor-pointer">
-            <!-- Icône Soleil (s'affiche en mode sombre) -->
-            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <!-- Icône Lune (s'affiche en mode clair) -->
-            <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-        </button>
+        <!-- Conteneur des Boutons d'actions (Langue + Thème) -->
+        <div class="flex items-center space-x-3 z-20">
+            <!-- SÉLECTEUR DE LANGUE (Design épuré et moderne) -->
+            <div class="relative flex items-center border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md rounded-xl px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all">
+                <!-- 🇨🇳 Icône de traduction (Lettre A & Caractère Chinois "文") -->
+                <svg class="w-5 h-5 mr-1.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 006-.371m0 0c1.12 2.233 2.707 4.12 4.755 5.51a21.751 21.751 0 01-4.76 2.871m4.755-8.381a48.4 48.4 0 013.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+                <select id="language-select" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
+                    <option value="fr" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">FR</option>
+                    <option value="en" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">EN</option>
+                    <option value="ln" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">LN</option>
+                </select>
+            </div>
+
+            <!-- Bouton de bascule Mode Sombre / Clair -->
+            <button id="theme-toggle" title="Changer de mode" class="w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all cursor-pointer">
+                <!-- Icône Soleil (s'affiche en mode sombre) -->
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <!-- Icône Lune (s'affiche en mode clair) -->
+                <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
     </header>
 
     <!-- CONTENU PRINCIPAL -->
@@ -57,35 +74,45 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                 </span>
-                <span class="text-xs font-semibold text-blue-700 dark:text-blue-400 tracking-wide uppercase">Nouvelle version disponible</span>
+                <span data-i18n="badgeNews" class="text-xs font-semibold text-blue-700 dark:text-blue-400 tracking-wide uppercase">Nouvelle version disponible</span>
             </div>
 
             <!-- Titres -->
             <div class="space-y-4">
-                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-                    Connectez-vous instantanément avec <span class="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">Kadea Chat</span>
+                <h1 data-i18n="mainTitle" class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
+                    Connectez-vous instantanément avec 
                 </h1>
-                <p class="max-w-xl mx-auto text-base sm:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed">
+                <p data-i18n="titre" class="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-linear-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">Kadea Chat</p>
+                <p data-i18n="mainSubtitle" class="max-w-xl mx-auto text-base sm:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed">
                     Une expérience de messagerie fluide, rapide et sécurisée conçue pour rapprocher les esprits et simplifier vos échanges au quotidien.
                 </p>
             </div>
 
             <!-- Boutons d'action -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto pt-4">
-                <a href="./HTML/connexion.html" class="w-full sm:w-auto min-w-[180px] px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-200 text-center cursor-pointer transform hover:-translate-y-0.5">
+                <a data-i18n="btnConnexion" href="./HTML/connexion.html" class="w-full sm:w-auto min-w-[180px] px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-200 text-center cursor-pointer transform hover:-translate-y-0.5">
                     Se connecter
                 </a>
                 
-                <a href="./HTML/creationCompte.html" class="w-full sm:w-auto min-w-[180px] px-8 py-3.5 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 font-medium rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 text-center cursor-pointer backdrop-blur-md transform hover:-translate-y-0.5">
+                <a data-i18n="btnCreerCompte" href="./HTML/creationCompte.html" class="w-full sm:w-auto min-w-[180px] px-8 py-3.5 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 font-medium rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 text-center cursor-pointer backdrop-blur-md transform hover:-translate-y-0.5">
                     Créer un compte
                 </a>
             </div>
 
             <!-- Atouts -->
             <div class="pt-8 text-xs text-gray-400 dark:text-gray-500 flex items-center justify-center space-x-6 select-none">
-                <span class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Temps réel</span>
-                <span class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Échanges sécurisés</span>
-                <span class="flex items-center"><svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Mode Sombre</span>
+                <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 
+                    <span data-i18n="featureRealtime">Temps réel</span>
+                </span>
+                <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 
+                    <span data-i18n="featureSecure">Échanges sécurisés</span>
+                </span>
+                <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 
+                    <span data-i18n="featureDarkMode">Mode Sombre</span>
+                </span>
             </div>
 
         </div>
@@ -93,10 +120,10 @@
 
     <!-- PIED DE PAGE -->
     <footer class="w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between text-xs text-gray-400 dark:text-gray-600 border-t border-gray-100 dark:border-gray-900/50 z-10">
-        <p>&copy; 2026 Kadea Chat. Tous droits réservés.</p>
+        <p data-i18n="footerCopyright">&copy; 2026 Kadea Chat. Tous droits réservés.</p>
         <div class="flex space-x-4">
-            <a href="#" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Conditions</a>
-            <a href="#" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Confidentialité</a>
+            <a data-i18n="footerTerms" href="#" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Conditions</a>
+            <a data-i18n="footerPrivacy" href="#" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Confidentialité</a>
         </div>
     </footer>
 
