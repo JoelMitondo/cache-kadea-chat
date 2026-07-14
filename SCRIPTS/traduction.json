@@ -1,0 +1,29 @@
+{
+  "fr": {
+    "nomApp": "Kadea chat",
+    "dateCreationCompte": "Compte créé le",
+    "detailCompte": "Détails compte",
+    "priverSecurite": "Privé & Securité",
+    "toutAfficher" : "Tout afficher",
+    "titreTendance" : "Titres tendances",
+    "artistePopulaire" : "Artistes populaires"
+  },
+  "en": {
+    "nomApp": "Kadea chat",
+    "dateCreationCompte": "Member since",
+    "detailCompte": "Account Details",
+    "priverSecurite": "Privacy & Security",
+    "titreTendance" : "is english",
+    "artistePopulaire" : "is english"
+
+  },
+  "ln": {
+    "nomApp": "Kadea chat",
+    "dateCreationCompte": "Compte ebandaki",
+    "detailCompte": "Ba informations ya Compte",
+    "priverSecurite": "Privé & Securité",
+    "toutAfficher": "Lakisa Nioso",
+    "titreTendance" : "Ba Titres ya sika",
+    "artistePopulaire" : "Ba Yembi bayebani"
+  }
+}
