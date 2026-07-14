@@ -18,10 +18,10 @@ async function requeteSecurisee (url, options={}){
             let erreurData 
             //on lit si le message du backend est en JSON
             try{
-                erreurData = await reponse.json
+                erreurData = await reponse.json()
             } //au cas contraire on lit le texte
             catch(e){
-                erreurData = await reponse.json
+                erreurData = await reponse.json()
             }
             // en cas de ces erreurs, on return un objet
             return {
@@ -35,7 +35,7 @@ async function requeteSecurisee (url, options={}){
             }
         }
         // en cas de succèss, on parse JSON
-        const data = await reponse.json
+        const data = await reponse.json()
         return {
             success : true,
             data : data
@@ -66,13 +66,11 @@ async function connexion(url, email, password, key){
     })
     //Gestion du resultat
     if(resultat.success){
-        localStorage.setItem('token', resultat.data.data.token)
-        localStorage.setItem('tokenBrute', )
-        console.log("Donnée reçue avec succès", resultat.data)
-    //    const token = localStorage.getItem('token');
-    //    await informationUser(token);
-    //    await users(token);
-    //    await recevoirTousConversationUser(token);
+        localStorage.setItem('token',resultat.data.data.token)
+        const token = localStorage.getItem('token');
+        await informationUser(token);
+        await users(token);
+        await recevoirTousConversationUser(token);
         window.location.replace("profil.html")
     } else {
         console.error(" La requête a échoué :", resultat.erreur);
@@ -211,6 +209,6 @@ btnLogin.addEventListener('click', async (event)=>{
     }else{
         const emailValue = email.value;
         const passwordValue = passwordLogin.value;
-        await connexion(urlConnexion, email, passwordValue, key)    
+        await connexion(urlConnexion, emailValue, passwordValue, key)    
     }
 })

@@ -1,8 +1,10 @@
+const tokenBrute = JSON.parse(localStorage.getItem('tokenBrute'))
+console.log(tokenBrute)
+
 function affichageProfilUser(){
 const profilRecupere = JSON.parse(localStorage.getItem('profileUser'))
 const dateBrute = profilRecupere.createdAt
 
-console.log(profilRecupere)
 //convertir la chaine à un véritable objet Data du javascrip
 const date = new Date(dateBrute)
 
