@@ -49,73 +49,35 @@ async function requeteSecurisee (url, options={}){
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function requeteSecurisee(url, options = {}) {
-    try {
-        const response = await fetch(url, options);
-        // 1. Vérification des erreurs HTTP (Le backend renvoie une erreur 400 ou 500)
-        if (!response.ok) {
-            let errorData;
-            // On essaie de lire le message d'erreur envoyé par le backend (s'il est en JSON)
-            try {
-                errorData = await response.json();
-            } catch (e) {
-                // Si le backend n'a pas renvoyé de JSON, on lit le texte brut
-                errorData = await response.text();
-            }
-
-            // On construit et on retourne notre objet d'erreur
-            return {
-                success: false,
-                error: {
-                    status: response.status,
-                    statusText: response.statusText,
-                    details: errorData,
-                    type: 'Erreur HTTP'
-                }
-            };
+async function connexion(url, email, password, key){
+    const resultat = await requeteSecurisee (url, {
+        method : "POST",
+        body : JSON.stringify({
+            email: email,
+            password: password
+        }),
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": key
         }
-
-        // 2. Succès : On tente de parser la réponse en JSON
-        const data = await response.json();
+    })
+    //Gestion du resultat
+    if(resultat.success){
+        localStorage.setItem('token', resultat.data.data.token)
+        localStorage.setItem('tokenBrute', )
+        console.log("Donnée reçue avec succès", resultat.data)
+    } else {
+        console.error(" La requête a échoué :", resultat.erreur);
         
-        // On retourne les données reçues
-        return {
-            success: true,
-            data: data
-        };
-
-    } catch (erreur) {
-        // 3. Erreurs réseau (Pas d'internet, serveur éteint, ou erreur de parsing JSON)
-        return {
-            success: false,
-            error: {
-                message: erreur.message,
-                type: 'Erreur Réseau ou Système'
-            }
-        };
+        // Affichage message à l'utilisateur selon le type d'erreur
+        if (resultat.erreur.status === 401) {
+            alert("Votre session a expiré, veuillez vous reconnecter.");
+        } else {
+            alert("Une erreur est survenue lors du chargement des données.");
+        }
     }
 }
+
+
+
+connexion()
