@@ -54,7 +54,18 @@
     "recapNomLabel": "Nom",
     "recapPrenomLabel": "Prénom",
     "recapEmailLabel": "Email",
-    "boutonCreerCompteFinal": "Créer le compte"
+    "boutonCreerCompteFinal": "Créer le compte",
+    "titreConnexion": "Connexion",
+    "bienvenueRetour": "Bon retour",
+    "descriptionConnexion": "Veuillez entrer vos informations pour vous connecter à Kadea Chat.",
+    "adresseEmailLabel": "Adresse Email",
+    "motDePasseOublie": "Mot de passe oublié ?",
+    "erreurMotDePasseIncorrect": "Mot de passe incorrect",
+    "resterConnecte": "Rester connecté",
+    "boutonConnexion": "Se connecter",
+    "pasDeCompte": "Vous n'avez pas de compte ?",
+    "creerCompteLien": "Créer un compte",
+    "accueilLien": "Accueil"
   },
   "en": {
     "titre": "Kadea Chat",
@@ -111,7 +122,18 @@
     "recapNomLabel": "Name",
     "recapPrenomLabel": "First Name",
     "recapEmailLabel": "Email",
-    "boutonCreerCompteFinal": "Create Account"
+    "boutonCreerCompteFinal": "Create Account",
+    "titreConnexion": "Login",
+    "bienvenueRetour": "Welcome back",
+    "descriptionConnexion": "Please enter your details to sign in to Kadea Chat",
+    "adresseEmailLabel": "Email Address",
+    "motDePasseOublie": "Forgot?",
+    "erreurMotDePasseIncorrect": "Incorrect password",
+    "resterConnecte": "Keep me signed in",
+    "boutonConnexion": "Login",
+    "pasDeCompte": "Don't have an account?",
+    "creerCompteLien": "Create Account",
+    "accueilLien": "Home"
   },
   "ln": {
     "titre": "Kadea Chat",
@@ -168,7 +190,18 @@
     "recapNomLabel": "Kombo ya libota",
     "recapPrenomLabel": "Kombo",
     "recapEmailLabel": "Email",
-    "boutonCreerCompteFinal": "Kela compte"
+    "boutonCreerCompteFinal": "Kela compte",
+    "titreConnexion": "Kokota",
+    "bienvenueRetour": "Boyeyi malamu lisusu",
+    "descriptionConnexion": "Tia ba bilembo na yo mpo okota na Kadea Chat",
+    "adresseEmailLabel": "Adresse Email",
+    "motDePasseOublie": "Obosani mot de passe ?",
+    "erreurMotDePasseIncorrect": "Mot de passe ezali malamu te",
+    "resterConnecte": "Tikala na kati ya compte",
+    "boutonConnexion": "Kokota",
+    "pasDeCompte": "Oza naino na compte te ?",
+    "creerCompteLien": "Kela compte",
+    "accueilLien": "Ebandeli"
   }
 }
 

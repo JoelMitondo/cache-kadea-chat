@@ -1,14 +1,12 @@
-
-
 //les script qui gère la traduction de toutes les pages
-export function traductionDeLaPage(){
+function traductionDeLaPage(){
     let currentLanguage = localStorage.getItem('userLanguage') || 'fr';
     let translations = {}; // On crée un objet vide qui accueillera les données du JSON
     // 1. Fonction pour charger le fichier JSON
     async function loadTranslations() {
         try {
             // Le navigateur va chercher le fichier de manière asynchrone
-            const response = await fetch('./../SCRIPTS/traduction.json'); 
+            const response = await fetch('./SCRIPTS/traduction.json'); 
             translations = await response.json(); // On extrait les données JSON
             
             // Une fois le fichier chargé, on peut appliquer la traduction
@@ -30,11 +28,11 @@ export function traductionDeLaPage(){
             }
         });
 
-        document.getElementById('language-select').value = lang;
+        document.getElementById('language-select-pageIndex').value = lang;
     }
 
     // 3. Écouteur pour le changement de langue
-    document.getElementById('language-select').addEventListener('change', (e) => {
+    document.getElementById('language-select-pageIndex').addEventListener('change', (e) => {
         currentLanguage = e.target.value;
         localStorage.setItem('userLanguage', currentLanguage);
         applyTranslations(currentLanguage);
@@ -43,3 +41,4 @@ export function traductionDeLaPage(){
     // INITIALISATION : Au chargement de la page, on lance le chargement du JSON
     document.addEventListener('DOMContentLoaded', loadTranslations);
 }
+traductionDeLaPage()

@@ -6,6 +6,7 @@
     <title>Kadea Chat - Accueil</title>
     <!-- On charge le script de gestion avec type="module" -->
     <script src="./SCRIPTS/app.js" type="module"></script>
+    <script src="./SCRIPTS/traductionPageIndex.js" defer></script>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -47,7 +48,7 @@
                 <svg class="w-5 h-5 mr-1.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 006-.371m0 0c1.12 2.233 2.707 4.12 4.755 5.51a21.751 21.751 0 01-4.76 2.871m4.755-8.381a48.4 48.4 0 013.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                 </svg>
-                <select id="language-select" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
+                <select id="language-select-pageIndex" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
                     <option value="fr" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">FR</option>
                     <option value="en" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">EN</option>
                     <option value="ln" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">LN</option>
