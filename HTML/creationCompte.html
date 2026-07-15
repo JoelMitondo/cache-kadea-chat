@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Création Compte</title>
+    <title data-i18n="titreOnglet">Création Compte</title>
     <link rel="stylesheet" href="./../STYLES/output.css">
+    <script src="./../SCRIPTS/app.js" type="module" defer></script>
     <script src="./../SCRIPTS/creationCompte.js" defer></script>
+    <!-- Script d'initialisation rapide du thème pour éviter les scintillements -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
@@ -13,82 +22,104 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4 text-gray-800">
+<body class="min-h-screen bg-[#F8F9FA] dark:bg-gray-950 flex items-center justify-center p-4 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+    <div class="absolute top-3 right-3 flex items-center space-x-3 z-20">
+        <!-- SÉLECTEUR DE LANGUE (Design épuré et moderne) -->
+        <div class="relative flex items-center border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md rounded-xl px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all">
+            <!-- 🇨🇳 Icône de traduction (Lettre A & Caractère Chinois "文") -->
+            <svg class="w-5 h-5 mr-1.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 006-.371m0 0c1.12 2.233 2.707 4.12 4.755 5.51a21.751 21.751 0 01-4.76 2.871m4.755-8.381a48.4 48.4 0 013.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+            </svg>
+            <select id="language-select" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
+                <option value="fr" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">FR</option>
+                <option value="en" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">EN</option>
+                <option value="ln" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">LN</option>
+            </select>
+        </div>
 
-    <!--La page de la création du compte -->
+        <!-- Bouton de bascule Mode Sombre / Clair -->
+        <button id="theme-toggle" title="Changer de mode" class="w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all cursor-pointer">
+            <!-- Icône Soleil (s'affiche en mode sombre) -->
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <!-- Icône Lune (s'affiche en mode clair) -->
+            <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+    </div>
+<!--La page de la création du compte -->
     <div id="blocInformationCompte" class="w-full max-w-[440px]">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-8 py-10 mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 px-8 py-10 mb-4 transition-colors duration-300">
             
             <div class="mb-8">
-                <h1 class="text-2xl font-bold text-gray-900 mb-1.5">Create Account</h1>
-                <p class="text-gray-500 text-sm">Join the community and start chatting.</p>
+                <h1 data-i18n="creerCompte" class="text-2xl font-bold text-gray-900 dark:text-white mb-1.5">Create Account</h1>
+                <p data-i18n="rejoindreCommunaute" class="text-gray-500 dark:text-gray-400 text-sm">Join the community and start chatting.</p>
             </div>
 
             <form action="#" method="POST" class="space-y-5">
                 
                 <div>
-                    <label for="Name" class="block text-sm font-medium text-gray-700 mb-1.5">Name *</label>
+                    <label data-i18n="nomLabel" for="Name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Name *</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <input type="text" id="Name" required placeholder="MITONDO" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <input type="text" id="Name" required placeholder="MITONDO" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] dark:bg-gray-800 border-transparent dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all">
                     </div>
                     <p id="erreur-nom" class="hidden mt-1.5 text-xs text-red-500 font-medium"></p>
                 </div>
                 <div>
-                    <label for="prenom" class="block text-sm font-medium text-gray-700 mb-1.5">First Name *</label>
+                    <label data-i18n="prenomLabel" for="prenom" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">First Name *</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <input type="text" id="prenom" required placeholder="Joel" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <input type="text" id="prenom" required placeholder="Joel" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] dark:bg-gray-800 border-transparent dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all">
                     </div>
                     <p id="erreur-prenom" class="hidden mt-1.5 text-xs text-red-500 font-medium"></p>
                 </div>
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email Address *</label>
+                    <label data-i18n="emailLabel" for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email Address *</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <input type="email" id="email" required placeholder="mitondo@gmail.com" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <input type="email" id="email" required placeholder="mitondo@gmail.com" class="block w-full pl-11 pr-3 py-2.5 bg-[#F4F5FA] dark:bg-gray-800 border-transparent dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all">
                     </div>
                     <p id="erreur-email" class="hidden mt-1.5 text-xs text-red-500 font-medium">L'adresse email n'est pas valide.</p>
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password *</label>
+                    <label data-i18n="motDePasseLabel" for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password *</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
-                        <input type="password" id="password" required placeholder="••••••••" class="block w-full pl-11 pr-10 py-2.5 bg-[#F4F5FA] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
-                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
-                            <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <input type="password" id="password" required placeholder="••••••••" class="block w-full pl-11 pr-10 py-2.5 bg-[#F4F5FA] dark:bg-gray-800 border-transparent dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all">
+                        <!-- ID ajouté pour cibler l'œil dynamique en JS -->
+                        <div id="togglePasswordBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
+                            <svg class="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </div>
                     </div>
                     <ul class="mt-1.5 text-xs font-medium space-y-1 pl-1">
-                        <div class="flex flex-row"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurUn w-4 h-4" alt="icone close"><li id="error-pwd-length" class=" text-red-500"> Doit contenir au moins 8 caractères</li></div>
-                        <div class="flex flex-row"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurDeux w-4 h-4" alt="icone close"><li id="error-pwd-letter" class="text-red-500"> Doit contenir au moins une lettre</li></div>
-                        <div class="flex flex-row"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurTrois w-4 h-4" alt="icone close"><li id="error-pwd-number" class="text-red-500"> Doit contenir au moins un chiffre</li></div>
-                        <div class="flex flex-row"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurQuatre w-4 h-4" alt="icone close"><li id="error-pwd-special" class="text-red-500"> Doit contenir au moins un caractère spécial</li></div>
+                        <div class="flex flex-row items-center gap-1.5"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurUn w-4 h-4" alt="icone close"><li data-i18n="regleLongueur" id="error-pwd-length" class=" text-red-500"> Doit contenir au moins 8 caractères</li></div>
+                        <div class="flex flex-row items-center gap-1.5"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurDeux w-4 h-4" alt="icone close"><li data-i18n="regleLettre" id="error-pwd-letter" class="text-red-500"> Doit contenir au moins une lettre</li></div>
+                        <div class="flex flex-row items-center gap-1.5"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurTrois w-4 h-4" alt="icone close"><li data-i18n="regleChiffre" id="error-pwd-number" class="text-red-500"> Doit contenir au moins un chiffre</li></div>
+                        <div class="flex flex-row items-center gap-1.5"><img src="../IMAGES/ICONES/closeRed.svg" class="erreurQuatre w-4 h-4" alt="icone close"><li data-i18n="regleSpecial" id="error-pwd-special" class="text-red-500"> Doit contenir au moins un caractère spécial</li></div>
                     </ul>
                 </div>
 
                 <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1.5">Confirm Password *</label>
+                    <label data-i18n="confirmerMotDePasseLabel" for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Confirm Password *</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -96,31 +127,33 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 13v2m-3 2h6a1 1 0 001-1v-3a1 1 0 00-1-1h-6a1 1 0 00-1 1v3a1 1 0 001 1zm4-6V8a3 3 0 00-6 0v2h6z" />
                             </svg>
                         </div>
-                        <input type="password" id="confirmPassword" required placeholder="••••••••" class="block w-full pl-11 pr-10 py-2.5 bg-[#F4F5FA] border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
-                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
-                            <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <input type="password" id="confirmPassword" required placeholder="••••••••" class="block w-full pl-11 pr-10 py-2.5 bg-[#F4F5FA] dark:bg-gray-800 border-transparent dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all">
+                        <!-- ID ajouté pour cibler le deuxième œil dynamique en JS -->
+                        <div id="toggleConfirmPasswordBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer">
+                            <svg class="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </div>
                     </div>
-                    <p id="error-confirmPwd" class="hidden mt-1.5 text-xs text-red-500 font-medium">Les mots de passe ne correspondent pas.</p>
+                    <p data-i18n="erreurMotsDePasseDifferents" id="error-confirmPwd" class="hidden mt-1.5 text-xs text-red-500 font-medium">Les mots de passe ne correspondent pas.</p>
                 </div>
 
                 <button type="submit" id="btnCreationCompte" class="mt-6 w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-[15px] font-semibold text-white bg-[#0A4DD4] hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-colors">
-                    Suivant
+                    <span data-i18n="boutonSuivant">Suivant</span>
                 </button>
 
-                <p class="text-[13px] text-center text-gray-500 mt-5 leading-relaxed">
-                    By signing up, you agree to our 
-                    <a href="#" class="text-[#0A4DD4] font-medium hover:underline">Terms of Service</a> and 
-                    <a href="#" class="text-[#0A4DD4] font-medium hover:underline">Privacy Policy</a>.
+                <p class="text-[13px] text-center text-gray-500 dark:text-gray-400 mt-5 leading-relaxed">
+                    <span data-i18n="texteAccord">By signing up, you agree to our</span> 
+                    <a href="#" data-i18n="lienConditions" class="text-[#0A4DD4] font-medium hover:underline">Terms of Service</a> 
+                    <span data-i18n="texteEt">and</span> 
+                    <a href="#" data-i18n="lienConfidentialite" class="text-[#0A4DD4] font-medium hover:underline">Privacy Policy</a>.
                 </p>
             </form>
         </div>
 
-        <p class="text-center text-sm text-gray-600">
-            Already have an account? <a href="./connexion.html" class="text-[#0A4DD4] font-medium hover:underline">Log in</a>
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+            <span data-i18n="texteDejaCompte">Already have an account?</span> <a href="./connexion.html" data-i18n="lienConnexion" class="text-[#0A4DD4] font-medium hover:underline">Log in</a>
         </p>
     </div>
 
@@ -130,19 +163,19 @@
     <div id="blocRecaputilatif" class="hidden w-full max-w-[420px] flex flex-col items-center">
         
         <!-- Titre & Sous-titre -->
-        <h1 class="text-2xl font-bold text-[#1D4ED8] mb-1.5 mt-4">Review your profile</h1>
-        <p class="text-gray-500 text-sm mb-6 text-center">Make sure everything looks good before creating your account.</p>
+        <h1 data-i18n="titreRecapitulatif" class="text-2xl font-bold text-[#1D4ED8] mb-1.5 mt-4">Review your profile</h1>
+        <p data-i18n="soustitreRecapitulatif" class="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center">Make sure everything looks good before creating your account.</p>
 
         <!-- Carte du Récapitulatif -->
-        <div class="bg-white w-full rounded-xl shadow-sm border border-gray-200 p-8">
+        <div class="bg-white dark:bg-gray-900 w-full rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8 transition-colors duration-300">
             <!-- Liste des informations -->
             <div class="space-y-4">
                 
                 <!-- Nom (Avec icône de modification) -->
                 <div>
-                    <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Name</p>
-                    <div class="flex items-center justify-between p-3 bg-[#F8FAFC] rounded-lg border border-gray-100">
-                        <span id="recap-nom" class="text-sm font-semibold text-gray-900">MITONDO</span>
+                    <p data-i18n="recapNomLabel" class="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Name</p>
+                    <div class="flex items-center justify-between p-3 bg-[#F8FAFC] dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50">
+                        <span id="recap-nom" class="text-sm font-semibold text-gray-900 dark:text-white">MITONDO</span>
                         <button type="button" class="text-gray-400 hover:text-[#2563EB] transition-colors p-1" title="Modifier le prénom">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -153,9 +186,9 @@
 
                 <!-- prenom (Avec icône de modification) -->
                 <div>
-                    <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">First Name</p>
-                    <div class="flex items-center justify-between p-3 bg-[#F8FAFC] rounded-lg border border-gray-100">
-                        <span id="recap-prenom" class="text-sm font-semibold text-gray-900">Joel</span>
+                    <p data-i18n="recapPrenomLabel" class="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">First Name</p>
+                    <div class="flex items-center justify-between p-3 bg-[#F8FAFC] dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50">
+                        <span id="recap-prenom" class="text-sm font-semibold text-gray-900 dark:text-white">Joel</span>
                         <button type="button" class="text-gray-400 hover:text-[#2563EB] transition-colors p-1" title="Modifier le nom">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -166,9 +199,9 @@
 
                 <!-- Email (SANS icône de modification) -->
                 <div>
-                    <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Email</p>
-                    <div class="flex items-center p-3 bg-[#F8FAFC] rounded-lg border border-gray-100">
-                        <span id="recap-email" class="text-sm text-gray-700">mitondo@gmail.com</span>
+                    <p data-i18n="recapEmailLabel" class="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                    <div class="flex items-center p-3 bg-[#F8FAFC] dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50">
+                        <span id="recap-email" class="text-sm text-gray-700 dark:text-gray-300">mitondo@gmail.com</span>
                     </div>
                 </div>
             </div>
@@ -178,7 +211,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Create Account
+                <span data-i18n="boutonCreerCompteFinal">Create Account</span>
             </button>
 
         </div>
