@@ -1,13 +1,17 @@
-/**
- * Effectue de requête fetch avec une gestion complète des erreurs.
- * Determination de type des valeurs pour chaque paramettre des function tous ce qui doit entré de 
- * @param {string} url - L'URL de l'API.
- * @param {object} options - Les options de la requête (method, headers, body, etc.).
- * @returns {object} { success: boolean, data: any, error: any }
- */
+export function identifiants(){
+    const key="wksp_43bb0d0056273188e10830ef1db75c22"
+    const urlGeneral = "https://kadea-chat-api.onrender.com"
+    const urlConnexion = `${urlGeneral}/auth/login`
+    const urlDeconnexion = `${urlGeneral}/auth/logout`
+    return {
+        key : key,
+        urlConnexion : urlConnexion,
+        urlDeconnexion : urlDeconnexion
+    }
+}
 
 //Fonction requete securisée 
-async function requeteSecurisee (url, options={}){
+export async function requeteSecurisee (url, options={}){
     try{
         const reponse = await fetch (url, options)
         //Vérification des erreurs HTTP (Le backend renvoie une erreur 400 ou 500)
@@ -49,35 +53,31 @@ async function requeteSecurisee (url, options={}){
     }
 }
 
-async function connexion(url, email, password, key){
-    const resultat = await requeteSecurisee (url, {
-        method : "POST",
-        body : JSON.stringify({
-            email: email,
-            password: password
-        }),
-        headers: {
-            "Content-Type": "application/json",
-            "x-api-key": key
-        }
-    })
-    //Gestion du resultat
-    if(resultat.success){
-        localStorage.setItem('token', resultat.data.data.token)
-        localStorage.setItem('tokenBrute', )
-        console.log("Donnée reçue avec succès", resultat.data)
-    } else {
-        console.error(" La requête a échoué :", resultat.erreur);
-        
-        // Affichage message à l'utilisateur selon le type d'erreur
-        if (resultat.erreur.status === 401) {
-            alert("Votre session a expiré, veuillez vous reconnecter.");
+
+
+//FUNCTION POUR LA DECONNECTION
+async function deconnection (url, token, key){
+    try{
+        const reponse = await fetch(`${url}/auth/logout`, {
+            "method" : "POST",
+            "headers": {
+                "Content-Type": "application/json",
+                "x-api-key": key,
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        const reponseData = await reponse.json();
+        if(reponse.ok){
+            // Supprimer tout ce qui est sauvegarder en local
+            localStorage.clear()
+        alert("Vous avez été déconnecté avec succès.");
+        window.location.replace("./connexion.html");
         } else {
-            alert("Une erreur est survenue lors du chargement des données.");
+            throw new Error(JSON.stringify(reponseData));
         }
+    } catch (error) {
+        alert("Erreur lors de la déconnexion. Veuillez réessayer.");
+        console.error("Erreur lors de la déconnexion :", error);
+        throw error;
     }
 }
-
-
-
-connexion()

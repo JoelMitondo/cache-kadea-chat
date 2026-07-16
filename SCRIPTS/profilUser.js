@@ -1,5 +1,6 @@
-const tokenBrute = JSON.parse(localStorage.getItem('tokenBrute'))
-console.log(tokenBrute)
+import {identifiants} from "./toutesLesRequetes"
+const urlDeconnexion = identifiants().urlDeconnexion
+const key = identifiants().key
 
 function affichageProfilUser(){
 const profilRecupere = JSON.parse(localStorage.getItem('profileUser'))
@@ -34,38 +35,6 @@ affichageProfilUser()
 const btnDeconnexion = document.getElementById("btnDeconnexion");
 btnDeconnexion.addEventListener('click', async (event)=>{
     event.preventDefault()
-    const token = localStorage.getItem('token');
-    const url = "https://kadea-chat-api.onrender.com"
-    const key = "wksp_43bb0d0056273188e10830ef1db75c22"
-    console.log(token)
     await deconnection (url, token, key)
-    
 });
 
-
-//FUNCTION POUR LA DECONNECTION
-async function deconnection (url, token, key){
-    try{
-        const reponse = await fetch(`${url}/auth/logout`, {
-            "method" : "POST",
-            "headers": {
-                "Content-Type": "application/json",
-                "x-api-key": key,
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        const reponseData = await reponse.json();
-        if(reponse.ok){
-            // Supprimer tout ce qui est sauvegarder en local
-            localStorage.clear()
-        alert("Vous avez été déconnecté avec succès.");
-        window.location.replace("./connexion.html");
-        } else {
-            throw new Error(JSON.stringify(reponseData));
-        }
-    } catch (error) {
-        alert("Erreur lors de la déconnexion. Veuillez réessayer.");
-        console.error("Erreur lors de la déconnexion :", error);
-        throw error;
-    }
-}

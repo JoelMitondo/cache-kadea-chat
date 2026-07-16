@@ -1,6 +1,10 @@
-const key="wksp_43bb0d0056273188e10830ef1db75c22"
-const urlGeneral = "https://kadea-chat-api.onrender.com"
-const urlConnexion = `${urlGeneral}/auth/login`
+import {afficherNotification} from "./scripts.js"
+import {requeteSecurisee, identifiants} from "./toutesLesRequetes.js"
+const urlConnexion = identifiants().urlConnexion
+const key = identifiants().key
+
+const messageConnexionReussi = "Connexion réussie ! Bienvenue sur Kadea Chat"
+const messageConnexionEchoue = "connexion echoué, veillez réssayé"
 
 /* 
 après la connexion réussi de l'utilisateur, voila les informations stocké en locastorage
@@ -8,49 +12,6 @@ son token avec comme nom variable "token" et son profil avec comme nom variable 
 tous les utilisateurs avec comme nom variable "tousLesUsers" parse pour l'utilisation
 toutes les conversations du user connecté avec comme nom variable "toutesLesConversations" parse pour l'utilisation
 */
-
-//Fonction requete securisée 
-async function requeteSecurisee (url, options={}){
-    try{
-        const reponse = await fetch (url, options)
-        //Vérification des erreurs HTTP (Le backend renvoie une erreur 400 ou 500)
-        if(!reponse.ok){
-            let erreurData 
-            //on lit si le message du backend est en JSON
-            try{
-                erreurData = await reponse.json()
-            } //au cas contraire on lit le texte
-            catch(e){
-                erreurData = await reponse.json()
-            }
-            // en cas de ces erreurs, on return un objet
-            return {
-                success : false,
-                erreur : {
-                    status : reponse.status,
-                    statusText : reponse.statusText,
-                    details : erreurData,
-                    type: 'Erreur HTTP'
-                }
-            }
-        }
-        // en cas de succèss, on parse JSON
-        const data = await reponse.json()
-        return {
-            success : true,
-            data : data
-        }
-    } catch (erreur){
-        //Erreurs réseau (Pas d'internet, serveur éteint, ou erreur de parsing JSON)
-        return {
-            success : false,
-            erreur : {
-                message : erreur.message,
-                type : "Erreur reseau ou système"
-            }
-        }
-    }
-}
 
 async function connexion(url, email, password, key){
     const resultat = await requeteSecurisee (url, {
@@ -71,20 +32,18 @@ async function connexion(url, email, password, key){
         await informationUser(token);
         await users(token);
         await recevoirTousConversationUser(token);
+        afficherNotification(messageConnexionReussi, true)
         window.location.replace("profil.html")
     } else {
         console.error(" La requête a échoué :", resultat.erreur);
-        
         // Affichage message à l'utilisateur selon le type d'erreur
         if (resultat.erreur.status === 401) {
-            alert("Votre session a expiré, veuillez vous reconnecter.");
+            afficherNotification(messageConnexionEchoue, false);
         } else {
-            alert("Une erreur est survenue lors du chargement des données.");
+            afficherNotification(messageConnexionEchoue, false);
         }
     }
 }
-
-
 
 
 

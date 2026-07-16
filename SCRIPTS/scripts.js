@@ -90,3 +90,48 @@ export function affichageMotDePasseConnexion(){
         });
     }
 }
+
+export function afficherNotification(message, isSuccess) {
+    const popop = document.getElementById('pop-notification');
+    const popopMessage = document.getElementById('pop-message');
+    const popopIconContainer = document.getElementById('pop-icon-container');
+
+    // 1. On met à jour le texte
+    popopMessage.textContent = message;
+
+    // 2. On configure l'apparence selon le succès ou l'erreur
+    if (isSuccess) {
+        // STYLE SUCCÈS (Fond Vert)
+        popop.className = "fixed top-5 right-5 z-[10000] transform transition-all duration-500 flex items-center w-full max-w-sm p-4 space-x-3 rounded-lg shadow-xl text-white bg-green-600 dark:bg-green-700 translate-x-full opacity-0";
+        
+        // Icône Check (Coche)
+        popopIconContainer.innerHTML = `
+            <svg class="w-5 h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+            </svg>
+        `;
+    } else {
+        // STYLE ERREUR (Fond Rouge)
+        popop.className = "fixed top-5 right-5 z-[10000] transform transition-all duration-500 flex items-center w-full max-w-sm p-4 space-x-3 rounded-lg shadow-xl text-white bg-red-600 dark:bg-red-700 translate-x-full opacity-0";
+        
+        // Icône Croix (Erreur)
+        popopIconContainer.innerHTML = `
+            <svg class="w-5 h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+        `;
+    }
+
+    // 3. Animation d'entrée (On retire le décalage pour la faire glisser dans l'écran)
+    // On utilise un petit setTimeout pour laisser le temps au navigateur d'appliquer les couleurs avant d'animer
+    setTimeout(() => {
+        popop.classList.remove('translate-x-full', 'opacity-0');
+        popop.classList.add('translate-x-0', 'opacity-100');
+    }, 10);
+
+    // 4. Animation de sortie (On la recache après 4 secondes)
+    setTimeout(() => {
+        popop.classList.remove('translate-x-0', 'opacity-100');
+        popop.classList.add('translate-x-full', 'opacity-0');
+    }, 4000);
+}
