@@ -90,7 +90,11 @@
     "infobulleUtilisateurs": "Utilisateurs",
     "infobulleAppels": "Appels",
     "infobulleMonProfil": "Mon Profil",
-    "infobulleParametres": "Paramètres"
+    "infobulleParametres": "Paramètres",
+    "titrePageMessages": "Kadea Chat - Messages",
+    "monStatutActif": "Mon statut : Actif",
+    "rechercheConversations": "Rechercher des conversations..."
+
   },
   "en": {
     "titre": "Kadea Chat",
@@ -183,7 +187,10 @@
     "infobulleUtilisateurs": "Users",
     "infobulleAppels": "Calls",
     "infobulleMonProfil": "My Profile",
-    "infobulleParametres": "Settings"
+    "infobulleParametres": "Settings",
+    "titrePageMessages": "Kadea Chat - Messages",
+    "monStatutActif": "My Status: Active",
+    "rechercheConversations": "Search conversations..."
   },
   "ln": {
     "titre": "Kadea Chat",
@@ -276,7 +283,10 @@
     "infobulleUtilisateurs": "Bato",
     "infobulleAppels": "Babiangi",
     "infobulleMonProfil": "Profil na ngai",
-    "infobulleParametres": "Bibongiseli"
+    "infobulleParametres": "Bibongiseli",
+    "titrePageMessages": "Kadea Chat - Bansango",
+    "monStatutActif": "Ezaleli na ngai: Na mosala",
+    "rechercheConversations": "Luka masolo..."
   }
 }
 
