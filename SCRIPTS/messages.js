@@ -149,6 +149,23 @@ contenairConversationsMessages.addEventListener("click", async (event) => {
                 <div class="h-4 w-px bg-gray-300 dark:bg-gray-600 mx-1 hidden sm:block"></div>
                 <button class="hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
             </div>
+            <button title="Translate" data-i18n-title="infobulleTraduire" class="hover:text-gray-700 dark:hover:text-gray-200 transition-colors relative">
+                <div class="relative flex items-center border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md rounded-xl px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5 mr-1.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 006-.371m0 0c1.12 2.233 2.707 4.12 4.755 5.51a21.751 21.751 0 01-4.76 2.871m4.755-8.381a48.4 48.4 0 013.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                    <select id="language-select" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
+                        <option value="fr" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">FR</option>
+                        <option value="en" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">EN</option>
+                        <option value="ln" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">LN</option>
+                    </select>
+                </div>
+            </button>
+
+            <button id="theme-toggle" title="Toggle Dark Mode" data-i18n-title="infobulleTheme" class="hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
         </header>`;
 
     // 2. Cibler la zone des messages existante et la vider avant chargement
