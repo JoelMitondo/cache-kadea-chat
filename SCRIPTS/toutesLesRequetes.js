@@ -21,10 +21,10 @@ export async function requeteSecurisee (url, options={}){
             let erreurData 
             //on lit si le message du backend est en JSON
             try{
-                erreurData = await reponse.json
+                erreurData = await reponse.json()
             } //au cas contraire on lit le texte
             catch(e){
-                erreurData = await reponse.json
+                erreurData = await reponse.json()
             }
             // en cas de ces erreurs, on return un objet
             return {
@@ -38,7 +38,7 @@ export async function requeteSecurisee (url, options={}){
             }
         }
         // en cas de succèss, on parse JSON
-        const data = await reponse.json
+        const data = await reponse.json()
         return {
             success : true,
             data : data
@@ -69,13 +69,13 @@ export async function connexion(url, email, password, key){
     })
     //Gestion du resultat
     if(resultat.success){
-        localStorage.setItem('token',resultat.data.data.token)
-        const token = localStorage.getItem('token');
-        await informationUser(token);
-        await users(token);
-        await recevoirTousConversationUser(token);
+        localStorage.setItem('token', resultat.data.data.token)
         const messageConnexionReussi = "Connexion réussie ! Bienvenue sur Kadea Chat"
         afficherNotification(messageConnexionReussi, true)
+        const token = localStorage.getItem('token');
+        await informationUser(token, key);
+        await users(token, key);
+        await recevoirTousConversationUser(token, key);
         window.location.replace("profil.html")
     } else {
         console.error(" La requête a échoué :", resultat.erreur);
@@ -103,6 +103,7 @@ export async function deconnection (url, token, key){
     if(resultat.success){
         const messageDeconnexionTrue = "Vous êtes deconnecté avec succès !!" 
         afficherNotification(messageDeconnexionTrue, true)
+        localStorage.clear()
         window.location.replace("./connexion.html")
     } else{
         const messageDeconnexionFalse = "Echec de la déconnexion " 
@@ -114,7 +115,7 @@ export async function deconnection (url, token, key){
 
 //LES FONCTIONS CI-DESSOUS DOIVENT ETRE AMELIORER MALGRE QU'ELLES FONCTIONNENT DEJQ
 
-async function informationUser(token){
+async function informationUser(token, key){
     try {
         const reponse = await fetch("https://kadea-chat-api.onrender.com/auth/me", {
         method : "GET",
@@ -135,7 +136,7 @@ async function informationUser(token){
 }
 
 //FUNCTION QUI RECUPERE LES INFORMATIONS USERS
-async function users(token){
+async function users(token, key){
     try {
         const reponse = await fetch("https://kadea-chat-api.onrender.com/users", {
             method : "GET",
@@ -161,7 +162,7 @@ async function users(token){
 }
 
 //FUNCTION POUR RECUPERER TOUTES LES CONVERSATIONS DU USER
-async function recevoirTousConversationUser(token) {
+async function recevoirTousConversationUser(token, key) {
     try {
         const reponse = await fetch("https://kadea-chat-api.onrender.com/conversations", {
             method: "GET",
