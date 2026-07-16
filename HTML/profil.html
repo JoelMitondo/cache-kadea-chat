@@ -6,6 +6,7 @@
     <title>Kadea Chat - Profil</title>
     <link rel="stylesheet" href="../STYLES/output.css">
     <script src="./../SCRIPTS/app.js" type="module" defer></script>
+    <script src="./../SCRIPTS/appRequete.js" type="module" defer></script>
     <script src="./../SCRIPTS/profilUser.js" defer></script>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -188,5 +189,20 @@
         </nav>
     </aside>
 
+
+    <!-- Pop-up de Notification -->
+    <div id="pop-notification" class="fixed top-5 right-5 z-[10000] transform transition-all duration-500 translate-x-full opacity-0 flex items-center w-full max-w-sm p-4 space-x-3 rounded-lg shadow-xl text-white" role="alert">
+        
+        <!-- Zone de l'icône (dynamique) -->
+        <div id="pop-icon-container" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-white/20">
+            <!-- L'icône SVG sera injectée ici par JavaScript -->
+        </div>
+        
+        <!-- Texte du message -->
+        <div id="pop-message" class="ml-3 text-sm font-medium">
+            Message par défaut
+        </div>
+
+    </div>
 </body>
 </html>
