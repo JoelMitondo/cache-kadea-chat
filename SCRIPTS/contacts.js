@@ -198,3 +198,21 @@ async function creationConversation (token, userId1, userId2) {
         throw error;
     }
 }
+
+
+const inputRechercheMembre = document.querySelector(".inputRechercheMembre") //input de recherche
+//ecoute a chaque qu'il y a une lettre
+inputRechercheMembre.addEventListener("click", (event)=>{
+    const recherche = event.target.value.toUpperCase
+
+    const utilisateur = document.querySelectorAll("utilisateur")
+    utilisateur.forEach((bulle)=>{
+        const nomContact = bulle.querySelector("h3").textContent.toUpperCase();
+
+        if(nomContact.includes(recherche)){
+            bulle.classList.remove("hidden")
+        }else{
+            bulle.classList.add("hidden")
+        }
+    })
+})
