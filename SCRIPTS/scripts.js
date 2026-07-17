@@ -135,3 +135,10 @@ export function afficherNotification(message, isSuccess) {
         popop.classList.add('translate-x-full', 'opacity-0');
     }, 4000);
 }
+
+export function infoUser(){
+    const profilRecupere = JSON.parse(localStorage.getItem('profileUser'));
+    const imgUser = document.getElementById("imgUser")
+    imgUser.src=`${profilRecupere.avatarUrl}`
+    imgUser.alt=`Photo profil de ${profilRecupere.fullName}`
+}

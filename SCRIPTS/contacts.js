@@ -11,6 +11,66 @@ const users = JSON.parse(tousUsers) //tableau des tous les users
 const toutesConversations = localStorage.getItem("toutesLesConversations")
 const conversations = JSON.parse(toutesConversations)
 
+//Affichage des comptes crées récemment
+const comptesParDate = structuredClone(users)
+comptesParDate.sort((a,b)=> new Date(b.createdAt) - 
+new Date(a.createdAt))
+
+const compteRecents = []
+for(let i = 0; i < 3; i++ ){
+    compteRecents.push(comptesParDate[i])
+}
+const divCompteRecent = document.getElementById("divCompteRecent")
+divCompteRecent.innerHTML=""
+for(compteRecent of compteRecents){
+    const divGeneral = document.createElement("div")
+    divGeneral.className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm flex flex-col items-center text-center"
+    const divImg = document.createElement("div")
+    divImg.classList.add("relative")
+    const img = document.createElement("img")
+        if(compteRecent.avatarUrl === null){
+            const imgDiv = document.createElement("div")
+            imgDiv.className="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
+            const initialNameUser = `${compteRecent.fullName}`
+            const initiale = initialNameUser.trim().split(" ") //transformer en tableau
+            .splice(0,2).map(mot=>mot.charAt(0).toUpperCase()).join("");
+            imgDiv.textContent= initiale
+            divImg.appendChild(imgDiv) 
+        } else{
+            img.src=`${compteRecent.avatarUrl}`
+            img.alt=`photo de ${compteRecent.fullName}`
+            img.className="w-14 h-14 rounded-full object-cover"
+            divImg.appendChild(img)
+        }
+
+    const puceVerte = document.createElement("div")
+    puceVerte.className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"
+    divImg.appendChild(puceVerte)
+
+    const name = document.createElement("h4")
+    name.textContent=`${compteRecent.fullName}`
+    name.className="font-semibold text-gray-900 dark:text-white mt-3 text-sm"
+
+    const email = document.createElement("p")
+    email.textContent=`${compteRecent.email}`
+    email.className="text-[11px] text-gray-400 dark:text-gray-500"
+
+    const button = document.createElement("button")
+    button.className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 rounded-lg transition-colors"
+    button.textContent="Discuter"
+
+    divGeneral.appendChild(divImg)
+    divGeneral.appendChild(name)
+    divGeneral.appendChild(email)
+    divGeneral.appendChild(button)
+
+    divCompteRecent.appendChild(divGeneral)
+}
+
+
+
+
+
 
 
 //affichage du nombre des users
@@ -33,10 +93,21 @@ for(user of users){
     const blocImg=document.createElement("div")
     blocImg.className="overflow-hidden w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm"
     const imgProfile=document.createElement("img")
-    imgProfile.src=`${user.avatarUrl}`
-    imgProfile.classList="w-full h-full object-cover"
-    imgProfile.alt=`Photo de ${user.fullName}`
-    blocImg.appendChild(imgProfile)
+
+    if(user.avatarUrl === null){
+        const imgDiv = document.createElement("div")
+        imgDiv.className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
+        const initialNameUser = `${user.fullName}`
+        const initiale = initialNameUser.trim().split(" ") //transformer en tableau
+        .splice(0,2).map(mot=>mot.charAt(0).toUpperCase()).join("");
+        imgDiv.textContent= initiale
+        blocImg.appendChild(imgDiv) 
+    } else{
+        imgProfile.src=`${user.avatarUrl}`
+        imgProfile.classList="w-full h-full object-cover"
+        imgProfile.alt=`Photo de ${user.fullName}`
+        blocImg.appendChild(imgProfile)
+    }
     const puceEnLigne =document.createElement("div")
     puceEnLigne.className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"
 
