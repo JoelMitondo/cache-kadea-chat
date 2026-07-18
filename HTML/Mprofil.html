@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modification Profil</title>
+        <link rel="stylesheet" href="./../STYLES/output.css">
+    <script src="./../SCRIPTS/Mprofil.js" defer></script>
+    <script src="./../SCRIPTS/app.js" type="module" defer></script>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <div class="absolute top-3 right-3 flex items-center space-x-3 z-20">
+        <!-- SÉLECTEUR DE LANGUE (Design épuré et moderne) -->
+        <div class="relative flex items-center border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md rounded-xl px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all">
+            <!-- 🇨🇳 Icône de traduction (Lettre A & Caractère Chinois "文") -->
+            <svg class="w-5 h-5 mr-1.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 006-.371m0 0c1.12 2.233 2.707 4.12 4.755 5.51a21.751 21.751 0 01-4.76 2.871m4.755-8.381a48.4 48.4 0 013.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+            </svg>
+            <select id="language-select" class="bg-transparent border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1">
+                <option value="fr" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">FR</option>
+                <option value="en" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">EN</option>
+                <option value="ln" class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">LN</option>
+            </select>
+        </div>
+
+        <!-- Bouton de bascule Mode Sombre / Clair -->
+        <button id="theme-toggle" title="Changer de mode" class="w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all cursor-pointer">
+            <!-- Icône Soleil (s'affiche en mode sombre) -->
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <!-- Icône Lune (s'affiche en mode clair) -->
+            <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+    </div>
+    <!--la page pour mettre la photo et le bio-->
+    <div id="blocphotoEtBio" class="w-full max-w-[420px] flex flex-col items-center">
+        
+        <!-- Logo Icon -->
+        <div class="bg-[#2563EB] w-12 h-12 rounded-xl flex items-center justify-center mb-5 shadow-sm">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+            </svg>
+        </div>
+
+        <!-- Titre & Sous-titre -->
+        <h1 class="text-2xl font-bold text-[#1D4ED8] dark:text-blue-400 mb-1.5">Complete Profile</h1>
+        <p class="text-gray-500 text-sm mb-6 text-center dark:text-gray-400">Add a photo and a short bio to help people recognize you.</p>
+
+        <!-- Carte du Formulaire -->
+        <div class="bg-white w-full rounded-xl shadow-sm border border-gray-200 p-8 dark:bg-gray-800 dark:border-gray-700 transition-colors duration-200">
+            <form action="#" method="POST" class="space-y-6">
+                
+
+                <!-- Section: Photo de Profil -->
+                <div class="flex flex-col items-center">
+                    <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 w-full mb-3">Profile Photo</span>
+                    
+                    <!-- Le conteneur principal (Clicable) -->
+                    <div id="photo-container" class="relative group cursor-pointer">
+                        
+                        <!-- Cercle d'upload -->
+                        <div id="photo-circle" class="w-24 h-24 rounded-full bg-[#F8FAFC] border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 group-hover:border-[#2563EB] group-hover:text-[#2563EB] group-hover:bg-blue-50 transition-all dark:bg-gray-900 dark:border-gray-700 dark:text-gray-500 dark:group-hover:text-blue-400 dark:group-hover:bg-blue-950/30 transition-all overflow-hidden relative">
+                            
+                            <!-- Icône et texte par défaut -->
+                            <div id="photo-placeholder" class="flex flex-col items-center">
+                                <svg class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span class="text-[10px] font-medium uppercase tracking-wider">Upload</span>
+                            </div>
+
+                            <!-- L'image de prévisualisation (cachée par défaut) -->
+                            <img id="photo-preview" class="absolute inset-0 w-full h-full object-cover hidden" alt="Profile Preview">
+                        </div>
+                        
+                        <!-- Input file caché -->
+                        <input type="file" id="profilePhoto" accept="image/png, image/jpeg, image/jpg" class="hidden">
+                        
+                        <!-- Petit badge "Modifier" en bas à droite -->
+                        <div class="dark:border-gray-800 absolute bottom-0 right-0 bg-[#2563EB] text-white p-1.5 rounded-full border-2 border-white shadow-sm z-10">
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Message d'erreur Photo -->
+                    <p id="error-photo" class="mt-2 text-xs text-red-500 font-medium hidden">Le fichier n'est pas une image valide.</p>
+                </div>
+
+                <!-- Section: Bio -->
+                <div>
+                    <label for="bio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Your Bio</label>
+                    <div class="relative">
+                        <textarea id="contenuBio" rows="3" placeholder="I am a software developer passionate about coding..." class="block w-full p-3 bg-[#F8FAFC] border border-transparent rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:bg-white focus:border-blue-600 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:bg-gray-800 dark:focus:border-blue-500 dark:focus:ring-blue-900/30 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"></textarea>
+                    </div>
+                    <!-- Message d'erreur Bio (ex: limite de caractères) -->
+                    <div class="flex justify-between items-center mt-1.5">
+                        <p id="error-bio" class="text-xs text-red-500 font-medium hidden">La bio ne doit pas dépasser 150 caractères.</p>
+                        <!-- Compteur de caractères (optionnel, pratique pour une bio) -->
+                        <p class="text-xs text-gray-400 ml-auto dark:text-gray-500"><span id="bio-counter">0</span>/150</p>
+                    </div>
+                </div>
+
+                <!-- Bouton d'enregistrement -->
+                <button type="submit" class="btnProfilEtBio w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-[15px] font-semibold text-white bg-[#2563EB] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors mt-2">
+                    Save
+                </button>
+
+            </form>
+        </div>
+
+
+    </div>
+
+
+
+</body>
+</html>
