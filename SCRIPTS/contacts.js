@@ -3,6 +3,7 @@ let lien = "https://kadea-chat-api.onrender.com"
 const profilRecupere = JSON.parse(localStorage.getItem('profileUser'))
 const monId = `${profilRecupere.id}`
 const token = localStorage.getItem('token')
+
 //récuperation de tous les users stockés en local
 const tousUsers = localStorage.getItem("tousLesUsers")
 const users = JSON.parse(tousUsers) //tableau des tous les users
@@ -13,35 +14,40 @@ const conversations = JSON.parse(toutesConversations)
 
 //Affichage des comptes crées récemment
 const comptesParDate = structuredClone(users)
-comptesParDate.sort((a,b)=> new Date(b.createdAt) - 
-new Date(a.createdAt))
+comptesParDate.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
 
 const compteRecents = []
 for(let i = 0; i < 3; i++ ){
-    compteRecents.push(comptesParDate[i])
+    if(comptesParDate[i]){ // sécurité en cas de moins de trois
+        compteRecents.push(comptesParDate[i])
+    }
 }
+
 const divCompteRecent = document.getElementById("divCompteRecent")
 divCompteRecent.innerHTML=""
-for(compteRecent of compteRecents){
+
+for(let compteRecent of compteRecents){
     const divGeneral = document.createElement("div")
     divGeneral.className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm flex flex-col items-center text-center"
+    
     const divImg = document.createElement("div")
     divImg.classList.add("relative")
     const img = document.createElement("img")
-        if(compteRecent.avatarUrl === null){
-            const imgDiv = document.createElement("div")
-            imgDiv.className="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
-            const initialNameUser = `${compteRecent.fullName}`
-            const initiale = initialNameUser.trim().split(" ") //transformer en tableau
+        
+    if(compteRecent.avatarUrl === null){
+        const imgDiv = document.createElement("div")
+        imgDiv.className="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
+        const initialNameUser = `${compteRecent.fullName}`
+        const initiale = initialNameUser.trim().split(" ") //transformer en tableau
             .splice(0,2).map(mot=>mot.charAt(0).toUpperCase()).join("");
-            imgDiv.textContent= initiale
-            divImg.appendChild(imgDiv) 
-        } else{
-            img.src=`${compteRecent.avatarUrl}`
-            img.alt=`photo de ${compteRecent.fullName}`
-            img.className="w-14 h-14 rounded-full object-cover"
-            divImg.appendChild(img)
-        }
+        imgDiv.textContent= initiale
+        divImg.appendChild(imgDiv) 
+    } else{
+        img.src=`${compteRecent.avatarUrl}`
+        img.alt=`photo de ${compteRecent.fullName}`
+        img.className="w-14 h-14 rounded-full object-cover"
+        divImg.appendChild(img)
+    }
 
     const puceVerte = document.createElement("div")
     puceVerte.className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"
@@ -67,12 +73,6 @@ for(compteRecent of compteRecents){
     divCompteRecent.appendChild(divGeneral)
 }
 
-
-
-
-
-
-
 //affichage du nombre des users
 const nbreUsers = document.querySelector(".nbreUsers")
 nbreUsers.textContent=users.length
@@ -80,8 +80,8 @@ nbreUsers.textContent=users.length
 //affichage des tous les utilisateurs
 const containerUsers=document.getElementById("containerUsers")//container de tous les users
 containerUsers.innerHTML=""
+
 for(user of users){
-    
     const blocsUser = document.createElement("div");
     blocsUser.id=user.id
     blocsUser.className="utilisateur p-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors"
@@ -152,7 +152,6 @@ for(user of users){
     blocsUser.appendChild(blocStatus)
 
     containerUsers.appendChild(blocsUser)
-    
 
 }
 
@@ -162,12 +161,8 @@ containerUsers.addEventListener("click", async (event)=>{
         return
     }
     const utilisateurId = utilisateur.id
-
-    await creationConversation (token, monId, utilisateurId)
-    // a chaque clique, j'ai recupère l'id du contact cliqué
-    /* j'ai déja enregisté l'id de user connecté sur monId
-    a chaque clique, ssi aucune conversation avec les deux id existe, j'en crée une
-    et je dirige l'utilisateur jusqu'à l'interface de leur message*/
+    const conver = conversations.conversations
+    handleContactClick(utilisateurId, conver, token, monId)
 
 })
 
@@ -200,19 +195,71 @@ async function creationConversation (token, userId1, userId2) {
 }
 
 
-const inputRechercheMembre = document.querySelector(".inputRechercheMembre") //input de recherche
-//ecoute a chaque qu'il y a une lettre
-inputRechercheMembre.addEventListener("click", (event)=>{
-    const recherche = event.target.value.toUpperCase
 
-    const utilisateur = document.querySelectorAll("utilisateur")
-    utilisateur.forEach((bulle)=>{
-        const nomContact = bulle.querySelector("h3").textContent.toUpperCase();
 
-        if(nomContact.includes(recherche)){
-            bulle.classList.remove("hidden")
-        }else{
-            bulle.classList.add("hidden")
+async function handleContactClick(clickedContactId, conversations, token, userId1) {
+    const objetVide = {}
+    // 1. Vérification : On cherche si une conversation privée existe déjà avec ce contact
+    const existingConversation = conversations.find(conv => {
+        if (conv.type !== "private") return false;
+        
+        // On vérifie si le contact cliqué fait partie des participants de cette conversation
+        return conv.participants.some(participant => participant.userId === clickedContactId);
+    });
+
+    if (existingConversation) {
+        // La conversation existe déjà ---
+        localStorage.setItem("ouvrirConversation", true)
+        localStorage.setItem("converId", existingConversation.id)
+        location.href ="message.html"
+    } else {
+        // --- CAS 2 : Aucune conversation n'existe, on la crée ---
+        alert("Aucune conversation trouvée. Création d'une nouvelle conversation...");
+        const idCrée = await creationConversation (token, userId1, clickedContactId)
+    }
+}
+
+//Système de recherche dynamique membres et contacts recents)
+const inputRechercheMembre = document.querySelector(".inputRechercheMembre")
+
+if (inputRechercheMembre) {
+    inputRechercheMembre.addEventListener("input", (event) => {
+        const recherche = event.target.value.toLowerCase().trim();
+
+        // 1. Filtrage dans "Tous les membres" (Recherche par nom ou par email)
+        const tousLesBlocsMembres = document.querySelectorAll(".utilisateur");
+        let membresVisibles = 0;
+
+        tousLesBlocsMembres.forEach((bulle) => {
+            const nomContact = bulle.querySelector("h3")?.textContent.toLowerCase() || "";
+            const emailContact = bulle.querySelector("p")?.textContent.toLowerCase() || "";
+
+            if (nomContact.includes(recherche) || emailContact.includes(recherche)) {
+                bulle.classList.remove("hidden");
+                membresVisibles++;
+            } else {
+                bulle.classList.add("hidden");
+            }
+        });
+
+        // Mise à jour dynamique du compteur
+        if (recherche) {
+            nbreUsers.textContent = `${membresVisibles} sur ${users.length}`;
+        } else {
+            nbreUsers.textContent = users.length;
         }
-    })
-})
+
+        // 2. Filtrage dans "Contacts Récents"
+        const cartesRecentes = divCompteRecent.children;
+        Array.from(cartesRecentes).forEach((carte) => {
+            const nomRecent = carte.querySelector("h4")?.textContent.toLowerCase() || "";
+            const emailRecent = carte.querySelector("p")?.textContent.toLowerCase() || "";
+
+            if (nomRecent.includes(recherche) || emailRecent.includes(recherche)) {
+                carte.classList.remove("hidden");
+            } else {
+                carte.classList.add("hidden");
+            }
+        });
+    });
+}
