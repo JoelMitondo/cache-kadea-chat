@@ -8,15 +8,13 @@ imgProfil.src = profilRecupere.avatarUrl
 const nomUser = document.getElementById("nomUser")
 nomUser.textContent = profilRecupere.fullName;
 
-// On récupère la version locale actuelle pour l'affichage instantané au démarrage
 let toutesConversations = JSON.parse(localStorage.getItem("toutesLesConversations"));
 const tousUsers = localStorage.getItem("tousLesUsers")
 const users = JSON.parse(tousUsers)
 
 const contenairConversationsMessages = document.getElementById("contenairConversationsMessages");
 
-// === MODIFICATION 1 : La fonction accepte maintenant un paramètre pour être réutilisable ===
-// === FONCTION MODIFIÉE ET SÉCURISÉE ===
+//Fonction d'affichage des conversations
 function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
     // Sécurité : On vérifie que les données existent
     if (!conversationsA_Afficher) return;
@@ -30,12 +28,10 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
         liste = liste.data || liste.conversations || Object.values(liste).find(Array.isArray);
     }
 
-    // Si après fouille on n'a toujours pas de tableau, on arrête pour éviter le crash
     if (!liste || !Array.isArray(liste)) {
         console.error("Impossible d'afficher les conversations : le format reçu n'est pas un tableau.", conversationsA_Afficher);
         return;
     }
-    // ----------------------------------------------------
 
     // On vide le conteneur avant de re-remplir (essentiel lors de la mise à jour en arrière-plan)
     contenairConversationsMessages.innerHTML = ""
@@ -130,7 +126,6 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
     }
 }
 
-// === NETTOYAGE DE LA FONCTION DE RAFRAÎCHISSEMENT ===
 async function rafraichirConversationsArrierePlan() {
     try {
         const reponse = await fetch(`https://kadea-chat-api.onrender.com/conversations`, {
@@ -142,50 +137,24 @@ async function rafraichirConversationsArrierePlan() {
             }
         });
         const reponseData = await reponse.json();
-        if (reponse.ok) {
-            // On sauvegarde la réponse brute ou nettoyée dans le localStorage
-            localStorage.setItem("toutesLesConversations", JSON.stringify(reponseData));
-            
-            // On envoie à l'affichage, notre nouvelle sécurité s'occupe du reste !
-            afficherLesUsers(reponseData);
-        }
-    } catch (error) {
-        console.error("Erreur lors du rafraîchissement des conversations en tâche de fond :", error);
-    }
-}
-// === MODIFICATION 3 : Nouvelle fonction pour récupérer la liste globale des conversations en arrière-plan ===
-async function rafraichirConversationsArrierePlan() {
-    try {
-        // Remplace cette URL par ton endpoint réel si nécessaire (ex: /conversations)
-        const reponse = await fetch(`https://kadea-chat-api.onrender.com/conversations`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "x-api-key": key,
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        const reponseData = await reponse.json();
-        if (reponse.ok) {
             const nouvellesConversations = reponseData.data || reponseData;
-            // Étape 1 : On enregistre la nouvelle liste en local
             localStorage.setItem("toutesLesConversations", JSON.stringify(nouvellesConversations));
-            // Étape 2 : On met à jour l'affichage de manière transparente pour l'utilisateur
-            afficherLesUsers(nouvellesConversations);
-        }
+            
+            // Mise à jour de la variable globale pour que la recherche se base sur le flux frais
+            toutesConversations = nouvellesConversations; 
+            
+            // On ne rafraîchit visuellement que si l'utilisateur n'est pas en train de taper une recherche
+            const searchBar = document.getElementById("searchBar");
+            if (!searchBar || !searchBar.value.trim()) {
+                afficherLesUsers(nouvellesConversations);
+            }
     } catch (error) {
         console.error("Erreur lors du rafraîchissement des conversations en tâche de fond :", error);
     }
 }
 
-// --- CYCLE DE CHARGEMENT DE LA PAGE ---
-// 1. On affiche instantanément ce qu'il y a dans le localStorage au démarrage
-afficherLesUsers(toutesConversations);
-// 2. On lance la requête réseau en arrière-plan pour mettre à jour s'il y a du nouveau
-rafraichirConversationsArrierePlan();
 
 
-// === MODIFICATION 4 : Isolation de la logique de rendu des messages pour la réutiliser ===
 function afficherLesMessagesDuCache(idConversation) {
     const zoneDesMessages = document.getElementById("zoneDesMessages");
     zoneDesMessages.innerHTML = ""; 
@@ -277,8 +246,6 @@ async function ListeMessagesConversations (token, idConversation) {
         throw error;
     }
 }
-
-// Les fonctions informationDuneConversation et envoyerMessage restent à leur place sans modifications structurelles...
 
 // FUNCTION POUR RECUPERER LES INFORMATION D'UNE CONVERSATION
 async function informationDuneConversation (key, token, conversationId) {
@@ -420,3 +387,65 @@ async function afficherMessageConversation (idConversation){
         await envoyerMessage(token, idConversation, contenu)
     });
 }
+
+const searchBar = document.getElementById("searchBar");
+
+if (searchBar) {
+    searchBar.addEventListener("input", (e) => {
+        const motCle = e.target.value.toLowerCase().trim();
+
+        // Si la barre est vide, on réaffiche toutes les conversations sans filtre
+        if (!motCle) {
+            afficherLesUsers(toutesConversations);
+            return;
+        }
+
+        // Extraction propre du tableau initial
+        let listeInitiale = toutesConversations;
+        if (listeInitiale && !Array.isArray(listeInitiale) && typeof listeInitiale === "object") {
+            listeInitiale = listeInitiale.data || listeInitiale.conversations || Object.values(listeInitiale).find(Array.isArray);
+        }
+
+        if (!listeInitiale || !Array.isArray(listeInitiale)) return;
+
+        // Filtrage multicritères
+        const conversationsFiltrees = listeInitiale.filter(conversation => {
+            
+            // Critère 1 : Recherche par Nom du contact (depuis les infos en cache)
+            let nomCorrespond = false;
+            const infoMessage = JSON.parse(localStorage.getItem(`infoConversation-${conversation.id}`));
+            if (infoMessage?.data?.conversation?.participants) {
+                nomCorrespond = infoMessage.data.conversation.participants.some(p => 
+                    p.user.id !== monId && p.user.fullName.toLowerCase().includes(motCle)
+                );
+            }
+
+            // Critère 2 : Recherche dans le dernier message direct de la liste
+            let dernierMessageCorrespond = false;
+            if (conversation.messages && conversation.messages.length > 0) {
+                dernierMessageCorrespond = conversation.messages[0].content?.toLowerCase().includes(motCle);
+            }
+
+            // Critère 3 : Recherche profonde dans TOUT l'historique de la discussion (depuis le cache)
+            let historiqueCorrespond = false;
+            const cacheMessages = localStorage.getItem(`messageConversation-${conversation.id}`);
+            if (cacheMessages) {
+                const messagesParsed = JSON.parse(cacheMessages);
+                const listeMessages = messagesParsed.messages || messagesParsed;
+                if (Array.isArray(listeMessages)) {
+                    historiqueCorrespond = listeMessages.some(m => m.content?.toLowerCase().includes(motCle));
+                }
+            }
+
+            // Conserver la ligne si l'un des 3 critères matche
+            return nomCorrespond || dernierMessageCorrespond || historiqueCorrespond;
+        });
+
+        // Injection des résultats filtrés à l'écran
+        afficherLesUsers(conversationsFiltrees);
+    });
+}
+
+// --- INITIALISATION AU CHARGEMENT DE LA PAGE ---
+afficherLesUsers(toutesConversations);
+rafraichirConversationsArrierePlan();

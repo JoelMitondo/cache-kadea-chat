@@ -213,8 +213,7 @@ async function handleContactClick(clickedContactId, conversations, token, userId
         localStorage.setItem("converId", existingConversation.id)
         location.href ="message.html"
     } else {
-        // --- CAS 2 : Aucune conversation n'existe, on la crée ---
-        alert("Aucune conversation trouvée. Création d'une nouvelle conversation...");
+        // --- CAS 2 : Aucune conversation n'existe, on la crée ---;
         const idCrée = await creationConversation (token, userId1, clickedContactId)
     }
 }
