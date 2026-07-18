@@ -166,7 +166,13 @@ function afficherLesMessagesDuCache(idConversation) {
     const messages = cacheParsed.messages || cacheParsed;
 
     if (!messages || !Array.isArray(messages)) return;
-
+    // Écouter le clic sur la petite flèche retour en haut du tchat
+    const btnRetourMobile = document.getElementById("btnRetourMobile");
+    if (btnRetourMobile) {
+        btnRetourMobile.addEventListener("click", () => {
+            history.back(); // Simule le bouton "Retour" du téléphone
+        });
+    }
     for (let message of messages) {
         const blocMessage = document.createElement("div");
         const divMessage = document.createElement("div");
@@ -204,10 +210,21 @@ function afficherLesMessagesDuCache(idConversation) {
 contenairConversationsMessages.addEventListener("click", async (event) => {
     const idConversationCliqué = event.target.closest(".classConversation");
     if (!idConversationCliqué) return;
-    const idConversation = idConversationCliqué.id;
-    
-    await afficherMessageConversation (idConversation)
-});
+
+    // GESTION DU PASSAGE AU CHAT SUR MOBILE
+    if (window.innerWidth < 768) { // Si on est sur écran mobile (< 768px)
+        // 1. On crée un faux historique dans le téléphone
+        history.pushState({ vue: "chat" }, "");
+        
+        // 2. On cache la liste et on montre la zone de tchat
+        document.getElementById("colonneListe").classList.add("hidden");
+        document.getElementById("containerDesMessagesDuneConversation").classList.remove("hidden");
+    }
+
+        const idConversation = idConversationCliqué.id;
+        
+        await afficherMessageConversation (idConversation)
+    });
 
 //Function pour afficher une conversation a partir d'un clique dans la page contact
 async function afficherApartirContact(){
@@ -315,7 +332,7 @@ async function afficherMessageConversation (idConversation){
 
     containerInfoContact.innerHTML = `
         <header class="h-16 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 sm:px-6 bg-white dark:bg-gray-800 flex-shrink-0">
-            <button class="mr-3 md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer">
+            <button id="btnRetourMobile" class="mr-3 md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             </button>
             <div class="flex items-center">
@@ -327,10 +344,8 @@ async function afficherMessageConversation (idConversation){
                     </div>
                 </div>
             </div>
-            <!-- ... Reste des boutons de l'en-tête inchangés ... -->
         </header>`;
 
-    // === MODIFICATION 5 : Application du Cache-First pour les messages ===
     // Étape A : On affiche INSTANTANÉMENT les anciens messages stockés localement
     afficherLesMessagesDuCache(idConversation);
 
@@ -346,7 +361,7 @@ async function afficherMessageConversation (idConversation){
     // Le bloc d'envoi et la gestion du bouton d'envoi restent inchangés
     const divBtnEnvoie = document.getElementById("divBtnEnvoie");
     divBtnEnvoie.innerHTML = `
-            <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+        <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 sm:p-2 cursor-pointer">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </button>
@@ -449,3 +464,12 @@ if (searchBar) {
 // --- INITIALISATION AU CHARGEMENT DE LA PAGE ---
 afficherLesUsers(toutesConversations);
 rafraichirConversationsArrierePlan();
+
+window.addEventListener("popstate", () => {
+    // Si l'utilisateur fait "Retour" sur son téléphone (ou via la flèche)
+    if (window.innerWidth < 768) {
+        // On réaffiche la liste et on cache le tchat
+        document.getElementById("colonneListe").classList.remove("hidden");
+        document.getElementById("containerDesMessagesDuneConversation").classList.add("hidden");
+    }
+});
