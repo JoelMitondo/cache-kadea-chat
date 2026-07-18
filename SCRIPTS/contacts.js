@@ -215,6 +215,7 @@ async function handleContactClick(clickedContactId, conversations, token, userId
     } else {
         // --- CAS 2 : Aucune conversation n'existe, on la crée ---;
         const idCrée = await creationConversation (token, userId1, clickedContactId)
+        location.href="message.html"
     }
 }
 
