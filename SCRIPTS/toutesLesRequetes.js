@@ -79,14 +79,55 @@ export async function connexion(url, email, password, key){
         window.location.replace("profil.html")
     } else {
         console.error(" La requête a échoué :", resultat.erreur);
-        // Affichage message à l'utilisateur selon le type d'erreur
-        if (resultat.erreur.status === 401) {
-            const messageConnexionEchoue = "connexion echoué, veillez réssayé"
-            afficherNotification(messageConnexionEchoue, false);
-        } else {
-            const messageConnexionEchoue = "connexion echoué, veillez réssayé"
-            afficherNotification(messageConnexionEchoue, false);
+        
+        // 1. Récupération sécurisée du statut et du message brut
+        const statutErreur = resultat?.erreur?.status;
+        const messageBrutAPI = resultat?.erreur?.message;
+
+        // 2. Définition du message par défaut au cas où la panne est inconnue
+        let messageNotification = "Une erreur imprévue est survenue. Veuillez réessayer.";
+
+        // 3. Traitement chirurgical selon le type d'erreur retourné par l'API
+        switch (statutErreur) {
+            case 400:
+                messageNotification = "Données invalides ou formulaire incomplet. Veuillez vérifier les champs.";
+                break;
+                
+            case 401:
+                messageNotification = "Identifiants incorrects (email ou mot de passe invalide).";
+                break;
+                
+            case 403:
+                messageNotification = "Accès interdit. Votre session a expiré ou vous n'avez pas les droits requis.";
+                break;
+                
+            case 404:
+                messageNotification = "La ressource ou l'utilisateur demandé reste introuvable.";
+                break;
+                
+            case 429:
+                messageNotification = "Trop de requêtes envoyées ! Veuillez patienter un instant avant de réessayer.";
+                break;
+                
+            case 500:
+            case 502:
+            case 503:
+                messageNotification = "Le serveur Kadea Chat rencontre un problème technique. Réessayez dans quelques minutes.";
+                break;
+                
+            default:
+                // Si l'API ne renvoie pas de code HTTP, on teste la connexion internet locale
+                if (!navigator.onLine) {
+                    messageNotification = "Connexion impossible. Veuillez vérifier votre accès Internet.";
+                } else if (messageBrutAPI) {
+                    // Secours si l'API envoie son propre texte descriptif
+                    messageNotification = messageBrutAPI;
+                }
+                break;
         }
+
+        // 4. Affichage de la notification personnalisée à l'utilisateur
+        afficherNotification(messageNotification, false);
     }
 }
 

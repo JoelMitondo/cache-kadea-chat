@@ -116,12 +116,24 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
             dernierMessage.textContent = "Aucun message pour le moment";
         }
 
+        // Intégration du clic prolongé sur la conversation
+        configurerLongPress(blocMessage, () => {
+            afficherModalActions("Options de conversation", [
+                { action: "supprimer", texte: "Supprimer la conversation", danger: true }
+            ], async (action) => {
+                if (action === "supprimer" && confirm("Voulez-vous supprimer cette discussion ?")) {
+                    await supprimerConversation(conversation.id);
+                }
+            });
+        });
+
         blocNomEtJour.appendChild(nomAutre)
         blocNomEtJour.appendChild(dernierjour)
         blocContenu.appendChild(blocNomEtJour)
         blocContenu.appendChild(dernierMessage)
         blocMessage.appendChild(blocImg);
         blocMessage.appendChild(blocContenu)
+        
         contenairConversationsMessages.appendChild(blocMessage)
     }
 }
@@ -177,15 +189,35 @@ function afficherLesMessagesDuCache(idConversation) {
         const blocMessage = document.createElement("div");
         const divMessage = document.createElement("div");
         
+        // Stockage de l'ID pour référence
+        const messageId = message.id || message._id;
+        
         if (message.senderId !== monId) {
             blocMessage.className = "flex flex-col mb-4 items-start";
-            divMessage.className = "max-w-[85%] sm:max-w-[70%] bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm px-4 py-2.5 text-[14px] shadow-sm";
+            divMessage.className = "max-w-[85%] sm:max-w-[70%] bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-sm px-4 py-2.5 text-[14px] shadow-sm cursor-pointer select-none";
         } else {
             blocMessage.className = "flex flex-col mb-4 items-end";
-            divMessage.className = "max-w-[85%] sm:max-w-[70%] bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 text-[14px] shadow-sm";
+            divMessage.className = "max-w-[85%] sm:max-w-[70%] bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 text-[14px] shadow-sm cursor-pointer select-none";
         }
         
         divMessage.textContent = message.content;
+        
+        // Intégration du clic prolongé sur le message
+        configurerLongPress(divMessage, () => {
+            afficherModalActions("Options du message", [
+                { action: "modifier", texte: "Modifier le message", danger: false },
+                { action: "supprimer", texte: "Supprimer le message", danger: true }
+            ], async (action) => {
+                if (action === "supprimer" && confirm("Supprimer ce message ?")) {
+                    await supprimerMessage(idConversation, messageId);
+                } else if (action === "modifier") {
+                    const nouveauTexte = prompt("Modifiez votre message :", message.content);
+                    if (nouveauTexte && nouveauTexte.trim() !== "" && nouveauTexte.trim() !== message.content) {
+                        await modifierMessage(idConversation, messageId, nouveauTexte.trim());
+                    }
+                }
+            });
+        });
         
         const heure = document.createElement("span");
         heure.className = "text-[10px] text-gray-400 mt-1.5 ml-1";
@@ -211,6 +243,11 @@ contenairConversationsMessages.addEventListener("click", async (event) => {
     const idConversationCliqué = event.target.closest(".classConversation");
     if (!idConversationCliqué) return;
 
+        // SÉCURITÉ : Si c'était un clic prolongé, on ignore le clic normal d'ouverture
+    if (idConversationCliqué.getAttribute('data-longpressed') === 'true') {
+        idConversationCliqué.removeAttribute('data-longpressed');
+        return;
+    }
     // GESTION DU PASSAGE AU CHAT SUR MOBILE
     if (window.innerWidth < 768) { // Si on est sur écran mobile (< 768px)
         // 1. On crée un faux historique dans le téléphone
@@ -226,19 +263,37 @@ contenairConversationsMessages.addEventListener("click", async (event) => {
         await afficherMessageConversation (idConversation)
     });
 
+
+
 //Function pour afficher une conversation a partir d'un clique dans la page contact
 async function afficherApartirContact(){
     document.addEventListener("DOMContentLoaded", async ()=>{
-        const ouvrirConversation = localStorage.getItem("ouvrirConversation")
-        const converId = localStorage.getItem("converId")
-        if(ouvrirConversation === true){
-            await afficherMessageConversation(converId)
+        const ouvrirConversation = localStorage.getItem("ouvrirConversation");
+        const converId = localStorage.getItem("converId");
+        
+        // CORRECTION 1 : On compare avec la chaîne de caractères "true"
+        if (ouvrirConversation === "true" && converId) {
+            
+            // CORRECTION 2 : Si l'utilisateur est sur écran mobile, on force l'affichage du bloc de chat
+            if (window.innerWidth < 768) {
+                const colonneListe = document.getElementById("colonneListe");
+                const containerChat = document.getElementById("containerDesMessagesDuneConversation");
+                
+                if (colonneListe) colonneListe.classList.add("hidden");
+                if (containerChat) containerChat.classList.remove("hidden");
+            }
 
-            localStorage.removeItem("ouvrirConversation")
+            // Chargement dynamique des messages
+            await afficherMessageConversation(converId);
+
+            // Nettoyage pour éviter que le chat s'ouvre tout seul si on actualise la page plus tard
+            localStorage.removeItem("ouvrirConversation");
         }
-    })
+    });
 }
-afficherApartirContact()
+afficherApartirContact();
+
+
 // FUNCTION POUR VOIR LA LISTE DES MESSAGES (Stocke en local)
 async function ListeMessagesConversations (token, idConversation) {
     try {
@@ -464,6 +519,184 @@ if (searchBar) {
 // --- INITIALISATION AU CHARGEMENT DE LA PAGE ---
 afficherLesUsers(toutesConversations);
 rafraichirConversationsArrierePlan();
+
+
+// --- UTILITAIRE : GESTION DU CLIC PROLONGÉ (LONG-PRESS) ---
+function configurerLongPress(element, callback) {
+    let timeoutId;
+    let estUnLongPress = false;
+
+    const demarrer = () => {
+        estUnLongPress = false;
+        element.removeAttribute('data-longpressed');
+        // Déclenchement après 600ms de pression continue
+        timeoutId = setTimeout(() => {
+            estUnLongPress = true;
+            element.setAttribute('data-longpressed', 'true');
+            callback();
+        }, 600);
+    };
+
+    const annuler = () => {
+        clearTimeout(timeoutId);
+        // Temporisation légère pour laisser passer l'événement click classique avant nettoyage
+        setTimeout(() => {
+            if (!estUnLongPress) element.removeAttribute('data-longpressed');
+        }, 50);
+    };
+
+    element.addEventListener("mousedown", demarrer);
+    element.addEventListener("touchstart", demarrer, { passive: true });
+    element.addEventListener("mouseup", annuler);
+    element.addEventListener("mouseleave", annuler);
+    element.addEventListener("touchend", annuler);
+}
+
+// --- UTILITAIRE : AFFICHAGE DU MODAL D'ACTIONS STYLE TAILWIND ---
+function afficherModalActions(titre, options, callbackChoix) {
+    const ancienModal = document.getElementById("custom-action-modal");
+    if (ancienModal) ancienModal.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "custom-action-modal";
+    modal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm";
+    
+    let boutonsHTML = "";
+    options.forEach(opt => {
+        boutonsHTML += `
+            <button data-action="${opt.action}" class="w-full px-4 py-3 text-left font-medium text-sm border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${opt.danger ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'}">
+                ${opt.texte}
+            </button>`;
+    });
+
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                <h3 class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">${titre}</h3>
+            </div>
+            <div class="flex flex-col">${boutonsHTML}</div>
+            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 border-t border-gray-100 dark:border-gray-700 text-right">
+                <button data-action="annuler" class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 uppercase tracking-wider">Annuler</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.addEventListener("click", (e) => {
+        const cible = e.target.closest("button");
+        if (!cible) {
+            if (e.target === modal) modal.remove();
+            return;
+        }
+        const action = cible.dataset.action;
+        modal.remove();
+        if (action !== "annuler") callbackChoix(action);
+    });
+}
+
+
+
+// --- API : SUPPRIMER UNE CONVERSATION ---
+async function supprimerConversation(idConversation) {
+    try {
+        const reponse = await fetch(`https://kadea-chat-api.onrender.com/conversations/${idConversation}`, {
+            method: "DELETE",
+            headers: { 
+                "Content-Type": "application/json", 
+                "x-api-key": key, 
+                "Authorization": `Bearer ${token}` 
+            }
+        });
+
+        if (reponse.ok) {
+            // 1. Récupérer la chaîne de caractères brute du localStorage
+            const donneesBrutes = localStorage.getItem("toutesLesConversations");
+            
+            if (donneesBrutes) {
+                // 2. Convertir le texte en objet/tableau JavaScript
+                let stockageParse = JSON.parse(donneesBrutes);
+                let tableauExtrait = [];
+
+                // 3. DETECTION DE LA STRUCTURE :
+                // CAS 1 : C'est un tableau direct [...]
+                if (Array.isArray(stockageParse)) {
+                    stockageParse = stockageParse.filter(c => c.id !== idConversation);
+                    tableauExtrait = stockageParse;
+                } 
+                // CAS 2 : C'est un objet qui contient le tableau dans .conversations (comme ton fichier contacts.js)
+                else if (stockageParse && Array.isArray(stockageParse.conversations)) {
+                    stockageParse.conversations = stockageParse.conversations.filter(c => c.id !== idConversation);
+                    tableauExtrait = stockageParse.conversations;
+                }
+                // CAS 3 : C'est un objet qui contient le tableau dans .data
+                else if (stockageParse && Array.isArray(stockageParse.data)) {
+                    stockageParse.data = stockageParse.data.filter(c => c.id !== idConversation);
+                    tableauExtrait = stockageParse.data;
+                }
+
+                // 4. Enregistrer la structure modifiée au même format dans le localStorage
+                localStorage.setItem("toutesLesConversations", JSON.stringify(stockageParse));
+
+                // 5. Rafraîchir l'affichage HTML avec le tableau nettoyé
+                if (typeof afficherLesUsers === "function") {
+                    afficherLesUsers(tableauExtrait);
+                }
+            }
+
+            // 6. Nettoyage de l'interface graphique
+            const containerChat = document.getElementById("containerDesMessagesDuneConversation");
+            if (containerChat) containerChat.classList.add("hidden");
+            
+            if (window.innerWidth < 768) {
+                const colonneListe = document.getElementById("colonneListe");
+                if (colonneListe) colonneListe.classList.remove("hidden");
+            }
+            
+        } else {
+            throw new Error("Erreur lors de la suppression sur le serveur");
+        }
+    } catch (error) {
+        console.error("Erreur lors du processus de suppression :", error);
+        alert("Impossible de supprimer la conversation.");
+    }
+}
+// --- API : SUPPRIMER UN MESSAGE ---
+async function supprimerMessage(idConversation, idMessage) {
+    try {
+        const reponse = await fetch(`https://kadea-chat-api.onrender.com/messages/${idMessage}`, {
+            method: "DELETE",
+            headers: { 
+                "Content-Type": "application/json", 
+                "x-api-key": key, 
+                "Authorization": `Bearer ${token}` }
+        });
+        if (reponse.ok) {
+            await ListeMessagesConversations(token, idConversation);
+            afficherLesMessagesDuCache(idConversation);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// --- API : MODIFIER UN MESSAGE ---
+async function modifierMessage(idConversation, idMessage, nouveauContenu) {
+    try {
+        const reponse = await fetch(`https://kadea-chat-api.onrender.com/messages/${idMessage}`, {
+            method: "PATCH", 
+            headers: { "Content-Type": "application/json", "x-api-key": key, "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({ "content": nouveauContenu })
+        });
+        if (reponse.ok) {
+            await ListeMessagesConversations(token, idConversation);
+            afficherLesMessagesDuCache(idConversation);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 window.addEventListener("popstate", () => {
     // Si l'utilisateur fait "Retour" sur son téléphone (ou via la flèche)

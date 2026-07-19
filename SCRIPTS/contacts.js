@@ -195,29 +195,41 @@ async function creationConversation (token, userId1, userId2) {
 }
 
 
-
-
 async function handleContactClick(clickedContactId, conversations, token, userId1) {
-    const objetVide = {}
-    // 1. Vérification : On cherche si une conversation privée existe déjà avec ce contact
-    const existingConversation = conversations.find(conv => {
+    // Sécurité au cas où l'objet conversations contient une propriété ou est directement un tableau
+    let listeConversations = conversations;
+    if (conversations && !Array.isArray(conversations)) {
+        listeConversations = conversations.data || conversations.conversations || Object.values(conversations).find(Array.isArray);
+    }
+
+    if (!listeConversations || !Array.isArray(listeConversations)) {
+        console.error("Impossible de parcourir les conversations.");
+        return;
+    }
+
+    // 1. Vérification : On cherche si une conversation privée existe déjà
+    const existingConversation = listeConversations.find(conv => {
         if (conv.type !== "private") return false;
-        
-        // On vérifie si le contact cliqué fait partie des participants de cette conversation
         return conv.participants.some(participant => participant.userId === clickedContactId);
     });
 
     if (existingConversation) {
-        // La conversation existe déjà ---
-        localStorage.setItem("ouvrirConversation", true)
-        localStorage.setItem("converId", existingConversation.id)
-        location.href ="message.html"
+        // Cas 1 : La conversation existe déjà
+        localStorage.setItem("ouvrirConversation", "true"); // Enregistré en chaîne de caractères
+        localStorage.setItem("converId", existingConversation.id);
+        location.href = "message.html";
     } else {
-        // --- CAS 2 : Aucune conversation n'existe, on la crée ---;
-        const idCrée = await creationConversation (token, userId1, clickedContactId)
-        location.href="message.html"
+        // Cas 2 : Aucune conversation n'existe, on la crée
+        const idCrée = await creationConversation(token, userId1, clickedContactId);
+        if (idCrée) {
+            localStorage.setItem("ouvrirConversation", "true"); // Ajout crucial ici
+            localStorage.setItem("converId", idCrée);          // Ajout crucial ici
+            location.href = "message.html";
+        }
     }
 }
+
+
 
 //Système de recherche dynamique membres et contacts recents)
 const inputRechercheMembre = document.querySelector(".inputRechercheMembre")
