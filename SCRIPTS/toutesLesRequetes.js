@@ -54,6 +54,8 @@ export async function requeteSecurisee (url, options={}){
         }
     }
 }
+
+
 // FONCTION DE LA CONNEXION
 export async function connexion(url, email, password, key){
     const resultat = await requeteSecurisee (url, {
@@ -70,16 +72,16 @@ export async function connexion(url, email, password, key){
     //Gestion du resultat
     if(resultat.success){
         localStorage.setItem('token', resultat.data.data.token)
-        const messageConnexionReussi = "Connexion réussie ! Bienvenue sur Kadea Chat"
-        afficherNotification(messageConnexionReussi, true)
+
         const token = localStorage.getItem('token');
         await informationUser(token, key);
         await users(token, key);
         await recevoirTousConversationUser(token, key);
         window.location.replace("profil.html")
     } else {
+        const loader = document.getElementById("page-loader")
         console.error(" La requête a échoué :", resultat.erreur);
-        
+        if (loader) loader.classList.add("hidden")
         // 1. Récupération sécurisée du statut et du message brut
         const statutErreur = resultat?.erreur?.status;
         const messageBrutAPI = resultat?.erreur?.message;
@@ -167,12 +169,11 @@ async function informationUser(token, key){
         })
         const reponseData = await reponse.json()
         if(reponse.ok){
-            alert("Voici votre profil récuperé :");
             const profileUser = reponseData.data.user;
             localStorage.setItem('profileUser', JSON.stringify(profileUser));
         }
     } catch(error){
-        alert("Erreur lors de la récupération des informations de l'utilisateur :");
+        console.error("Erreur lors de la récupération des informations de l'utilisateur :");
     }
 }
 
@@ -189,7 +190,6 @@ async function users(token, key){
         })
         const reponseData = await reponse.json()
         if(reponse.ok){
-            alert("Voici la liste des utilisateurs :");
             const listeUtilisateurs = reponseData.data.users;
             localStorage.setItem('tousLesUsers', JSON.stringify(listeUtilisateurs));
         } else{
@@ -197,7 +197,7 @@ async function users(token, key){
         }
 
     }catch(error){
-        alert("Erreur lors de la récupération des utilisateurs :");
+        console.error("Erreur lors de la récupération des utilisateurs :");
         throw error;
     }
 }
@@ -217,7 +217,7 @@ async function recevoirTousConversationUser(token, key) {
         if (reponse.ok) {
             const toutesLesConversations = reponseData.data.conversations; //renvoie un tableau de toutes les conversations du user connecté, chaque conversation contient un objet de messages(avec toutes les informations nécessaires), si y a pas de conversation ça renvoie un tableau vide
             localStorage.setItem("toutesLesConversations", JSON.stringify(toutesLesConversations)); //stockage de toutes les conversations du user connecté dans le localStorage
-            alert("tous les conversations sont récuperées avec succès !");
+            
             console.log(toutesLesConversations); //j'ai regroupe un tableau qui contien toutes les conversations du user connecté, chaque conversation contient un objet de messages(avec toutes les informations nécessaires), si y a pas de conversation ça renvoie un tableau vide
         } else {
             throw new Error(JSON.stringify(reponseData));

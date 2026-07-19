@@ -58,6 +58,8 @@ btnLogin.addEventListener('click', async (event)=>{
     }else{
         const emailValue = email.value;
         const passwordValue = passwordLogin.value;
+        const loader = document.getElementById("page-loader")
+        if (loader) loader.classList.remove("hidden")
         await connexion(urlConnexion, emailValue, passwordValue, key)    
     }
 })
