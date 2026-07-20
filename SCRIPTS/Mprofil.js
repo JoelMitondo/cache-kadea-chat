@@ -1,4 +1,7 @@
-const key="wksp_43bb0d0056273188e10830ef1db75c22"
+import {identifiants} from "../config.js";
+const urlMprofil = identifiants().urlMprofil
+const key = identifiants().key
+
 
 //TRAITEMENT DE L'IMAGE ET LA PARTIE BIO
 
@@ -35,10 +38,6 @@ photoInput.addEventListener('change', async function(event) {
         photoPreview.classList.remove('hidden');
         photoPlaceholder.classList.add('hidden');
         photoCircle.classList.remove('border-dashed', 'border-gray-300', 'border-2');
-
-        // 2. ENVOI VERS CLOUDINARY
-        // Optionnel : tu pourrais afficher un petit spinner de chargement ici
-        alert("Envoi de l'image vers Cloudinary en cours...");
         
         try {
             // On prépare les données à envoyer
@@ -54,16 +53,9 @@ photoInput.addEventListener('change', async function(event) {
 
             // On convertit la réponse en JSON
             const data = await reponse.json();
-
-            // Cloudinary nous renvoie un lien sécurisé (https) de l'image ! que l'on stocke en local pour l'utiliser après.
             urlImageCloudinary = data.secure_url;
-            alert("Succès ! Voici le lien de ton image :"+ urlImageCloudinary);
              
-            
-            
-
-            // Tu peux maintenant utiliser ce lien quand l'utilisateur cliquera sur "Save & Continue"
-
+   
         } catch (erreur) {
             console.error("Erreur lors de l'envoi à Cloudinary :", erreur);
             errorPhoto.textContent = "Erreur lors du téléchargement de l'image. Veuillez réessayer.";
@@ -83,7 +75,7 @@ btnProfilEtBio.addEventListener("click", async (event)=>{
     const urlPhoto = urlImageCloudinary;
     const token = localStorage.getItem('token')
     const contenuBio = document.getElementById("contenuBio").value
-    await mPhotoAndBio(key, token, contenuBio, urlPhoto)
+    await mPhotoAndBio(key, token, urlMprofil, contenuBio, urlPhoto)
     .then(data => {
         if (data.success) {
         console.log("Profil mis à jour avec succès !", data);
@@ -97,9 +89,9 @@ btnProfilEtBio.addEventListener("click", async (event)=>{
 })
 
 //function pour la modification de la photo de profil et le bio
-async function mPhotoAndBio(key, token, contenuBio, urlPhoto) {
+async function mPhotoAndBio(key, token, url, contenuBio, urlPhoto) {
     try{
-        const reponse = await fetch('https://kadea-chat-api.onrender.com/users/me', {
+        const reponse = await fetch(url, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',

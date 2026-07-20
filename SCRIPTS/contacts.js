@@ -183,7 +183,6 @@ async function creationConversation (token, userId1, userId2) {
         })
         const reponseData = await reponse.json()
         if(reponse.ok){
-            alert("crée")
             return reponseData.data.conversation.id;
         } else {
             throw new Error(JSON.stringify(reponseData));                    

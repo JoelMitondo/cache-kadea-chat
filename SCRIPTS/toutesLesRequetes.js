@@ -1,17 +1,5 @@
 import {afficherNotification} from "./scripts.js"
 
-export function identifiants(){
-    const key="wksp_43bb0d0056273188e10830ef1db75c22"
-    const urlGeneral = "https://kadea-chat-api.onrender.com"
-    const urlConnexion = `${urlGeneral}/auth/login`
-    const urlDeconnexion = `${urlGeneral}/auth/logout`
-    return {
-        key : key,
-        urlConnexion : urlConnexion,
-        urlDeconnexion : urlDeconnexion
-    }
-}
-
 //Fonction requete securisée 
 export async function requeteSecurisee (url, options={}){
     try{

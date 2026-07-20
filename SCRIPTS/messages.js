@@ -33,7 +33,6 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
         return;
     }
 
-    // On vide le conteneur avant de re-remplir (essentiel lors de la mise à jour en arrière-plan)
     contenairConversationsMessages.innerHTML = ""
 
     // Tri de la liste nettoyée (du message le plus récent au plus ancien)
@@ -69,7 +68,8 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
         imgConversation.src = "rien" 
         
         const infoMessage = JSON.parse(localStorage.getItem(`infoConversation-${idConversation}`))
-        
+        const jugement = false
+        const imgDiv = document.createElement("div")
         if (infoMessage?.data?.conversation?.participants) {
             for (let participant of infoMessage.data.conversation.participants) {
                 if (participant.user.id !== monId) {
@@ -85,13 +85,28 @@ function afficherLesUsers(conversationsA_Afficher = toutesConversations) {
                         if (participant.user.id !== monId) {
                             nomAutre.textContent = participant.user.fullName
                             imgConversation.src = participant.user.avatarUrl
+                                    if(participant.user.avatarUrl === null){
+                                        imgDiv.className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
+                                        const initialNameUser = `${participant.user.fullName}`
+                                        const initiale = initialNameUser.trim().split(" ") //transformer en tableau
+                                        .splice(0,2).map(mot=>mot.charAt(0).toUpperCase()).join("");
+                                        imgDiv.textContent= initiale
+                                         
+                                        jugement= false
+                                    } else{
+                                        jugement = true
+                                    }
                         }
                     }
                 }
             }).catch(err => console.error("Erreur tâche de fond détails conversation:", err));
         }
+        if(jugement){
+            blocImg.appendChild(imgConversation)
+        }else{
+            imgDiv.appendChild(imgConversation)
+        }
 
-        blocImg.appendChild(imgConversation)
         const dernierjour = document.createElement("span")
         dernierjour.className = "text-[11px] text-gray-400"
         dernierjour.id = conversation.id
@@ -359,7 +374,7 @@ async function envoyerMessage(token, conversationId, contenu) {
         });
         const reponseData = await reponse.json();
         if (reponse.ok) {
-            alert("message envoyer")
+            
           await  afficherUneNouvelleBulleMessage(contenu)
         } else {
             throw new Error(JSON.stringify(reponseData));
@@ -658,7 +673,7 @@ async function supprimerConversation(idConversation) {
         }
     } catch (error) {
         console.error("Erreur lors du processus de suppression :", error);
-        alert("Impossible de supprimer la conversation.");
+        ;
     }
 }
 // --- API : SUPPRIMER UN MESSAGE ---

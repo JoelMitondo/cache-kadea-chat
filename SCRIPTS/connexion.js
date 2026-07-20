@@ -1,5 +1,6 @@
-import {identifiants, connexion} from "./toutesLesRequetes.js";
-const urlConnexion = identifiants().urlConnexion
+import {identifiants} from "../config.js";
+import {connexion} from "./toutesLesRequetes.js";
+const urlConnexion = identifiants().urlConnexion 
 const key = identifiants().key
 
 /* 

@@ -28,8 +28,6 @@ async function creationCompte(nom, prenom, email, password) {
             // On extrait le message pour l'utilisateur (la clé 'message' dépend de comment l'API est codée)
             const messageBackend = errorData.message || errorData.error || "Informations invalides.";
             
-            alert("Erreur lors de l'inscription : " + messageBackend);
-            
             // On arrête la fonction ici pour ne pas exécuter la suite
             return; 
         }
@@ -37,13 +35,11 @@ async function creationCompte(nom, prenom, email, password) {
         // 2. SUCCÈS : Si reponse.ok est true (statut 200 ou 201)
         const data = await reponse.json();
         
-        alert("Compte créé avec succès !");;
         window.location.replace('connexion.html');
 
     } catch(error) {
         // 3. GESTION DES ERREURS RÉSEAU UNIQUEMENT
         console.error('Erreur réseau ou critique', error);
-        alert("Impossible de joindre le serveur. Vérifiez votre connexion internet.");
     }
 }
 
